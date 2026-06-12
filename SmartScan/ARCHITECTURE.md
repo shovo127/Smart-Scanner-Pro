@@ -321,3 +321,24 @@ Every long-running operation in `SmartScannerPro.Application` and `SmartScannerP
 - TWAIN Direct support.
 - AI-based document classification and smart cropping.
 - Cloud Export Plugins (OneDrive, Google Drive, SharePoint).
+
+---
+
+## 19. Architecture Validation & Future Proofing
+
+During the Phase 0.6 Architecture Review, the following scalability aspects were validated:
+
+### 19.1 Cross-Platform Support (Linux & macOS)
+- **Validation**: The architecture strongly separates `SmartScannerPro.UI` (WPF) from `SmartScannerPro.Scanner` and `SmartScannerPro.Application`. 
+- **Improvement**: Future ports to AvaloniaUI or .NET MAUI will only require replacing the `UI` project. The core engines (ImageSharp, NAPS2 Sane/Mac drivers) are already cross-platform capable. `GdiImageContext` will need to be swapped for `ImageSharpContext` when moving off Windows.
+
+### 19.2 Cloud Sync & Enterprise Edition
+- **Validation**: `Settings` and `Profiles` are stored as pure JSON, making cloud syncing trivial via a `ICloudSyncService` plugin.
+- **Improvement**: Enterprise deployments can override configuration via Group Policy by injecting an `IConfigurationProvider` that reads from the Windows Registry before falling back to `settings.json`.
+
+### 19.3 Plugin Store & Scanner Marketplace
+- **Validation**: `AssemblyLoadContext` ensures plugins downloaded from a future marketplace cannot cause dependency conflicts.
+- **Improvement**: Added requirement for plugin manifest files (`plugin.json`) to declare required permissions and capabilities, ensuring the core engine can safely sandbox third-party OCR or Cloud plugins.
+
+### 19.4 AI Integrations
+- **Validation**: The `IImageProcessor` and `IOcrProvider` interfaces are coarse-grained enough to support AI backends (e.g., Azure Document Intelligence or local ONNX models) without modifying the orchestrator.

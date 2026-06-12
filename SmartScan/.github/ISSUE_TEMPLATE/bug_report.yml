@@ -1,0 +1,53 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: scanner_model
+    attributes:
+      label: Scanner Model
+      description: What is the exact make and model of your scanner?
+      placeholder: e.g., Brother MFC-L2710DW
+    validations:
+      required: true
+  - type: dropdown
+    id: connection_type
+    attributes:
+      label: Connection Type
+      description: How is the scanner connected?
+      options:
+        - USB
+        - Wi-Fi / Network (eSCL)
+        - Virtual / File
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Crash Report
+      description: Please paste the relevant lines from your Serilog logs here or attach the crash_report.zip.
+    validations:
+      required: false
