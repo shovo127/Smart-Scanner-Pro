@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using SmartScannerPro.Domain.ValueObjects;
+using SmartScannerPro.Scanner.Abstractions.Models.Discovery;
 
 /// <summary>
 /// Provides the execution context for scanner operations. This object flows through the entire scanner pipeline.
@@ -14,6 +15,7 @@ using SmartScannerPro.Domain.ValueObjects;
 public class OperationContext
 {
     private readonly ConcurrentDictionary<string, object> properties = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, double> metrics = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationContext"/> class.
@@ -36,6 +38,11 @@ public class OperationContext
     public Guid CorrelationId { get; }
 
     /// <summary>
+    /// Gets or sets the optional parent operation identifier for nested scanner operations.
+    /// </summary>
+    public Guid? ParentOperationId { get; set; }
+
+    /// <summary>
     /// Gets the cancellation token for the operation.
     /// </summary>
     public CancellationToken CancellationToken { get; }
@@ -53,12 +60,31 @@ public class OperationContext
     /// <summary>
     /// Gets or sets the identifier of the current session, if applicable.
     /// </summary>
-    public SessionId? CurrentSession { get; set; }
+    public SessionId? SessionId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the current session, if applicable.
+    /// </summary>
+    public SessionId? CurrentSession
+    {
+        get => this.SessionId;
+        set => this.SessionId = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the identifier of the current scan job, if applicable.
+    /// </summary>
+    public Guid? JobId { get; set; }
 
     /// <summary>
     /// Gets or sets the progress reporter for the operation.
     /// </summary>
     public IProgress<Models.Sessions.ScanProgress>? Progress { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current scanner descriptor, if applicable.
+    /// </summary>
+    public ScannerDescriptor? CurrentScanner { get; set; }
 
     /// <summary>
     /// Gets the time the operation started.
@@ -74,4 +100,9 @@ public class OperationContext
     /// Gets the dynamic property bag for sharing state across the pipeline.
     /// </summary>
     public IDictionary<string, object> Properties => this.properties;
+
+    /// <summary>
+    /// Gets the operation metrics captured during the operation.
+    /// </summary>
+    public IDictionary<string, double> Metrics => this.metrics;
 }

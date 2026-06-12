@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-FUJITSU-SCANSNAP-IX1600",
+  "Name": "Fujitsu ScanSnap iX1600",
+  "Manufacturer": "Fujitsu",
+  "ConnectionType": 0,
+  "ConnectionString": "USB\\VID_04C5&PID_132B",
+  "FirmwareVersion": "1.500",
+  "PerformanceModel": "Fast",
+  "SupportsDuplex": true,
+  "SupportedDpis": [150, 200, 300, 400, 600],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter"],
+  "DocumentKinds": [0, 3, 4, 5, 6],
+  "FailureInjectors": [],
+  "Capabilities": {
+  }
+}

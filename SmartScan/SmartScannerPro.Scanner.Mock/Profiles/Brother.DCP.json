@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-BROTHER-DCP-L2540DW",
+  "Name": "Brother DCP-L2540DW",
+  "Manufacturer": "Brother",
+  "ConnectionType": 1,
+  "ConnectionString": "192.168.1.102",
+  "FirmwareVersion": "J1906051748",
+  "PerformanceModel": "Network",
+  "SupportsDuplex": true,
+  "SupportedDpis": [100, 150, 200, 300, 600],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter"],
+  "DocumentKinds": [0, 3, 6],
+  "FailureInjectors": ["PaperJamInjector"],
+  "Capabilities": {
+  }
+}
