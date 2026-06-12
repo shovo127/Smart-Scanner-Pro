@@ -1,19 +1,19 @@
 namespace SmartScannerPro.Application;
+
 using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
-/// Extension methods for registering Application layer services.
+/// Provides extension methods for registering application layer services in the dependency injection container.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Adds Application layer services to the DI container.
+    /// Adds application layer services to the specified <see cref="IServiceCollection"/>.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <returns>The updated service collection.</returns>
+    /// <returns>The service collection with application services registered.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Register CQRS handlers, Validators, and Application Services here
         return services;
     }
 }

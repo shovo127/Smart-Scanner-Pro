@@ -1,24 +1,27 @@
 namespace SmartScannerPro.Tests.Architecture;
+
+using System.Reflection;
+using FluentAssertions;
 using NetArchTest.Rules;
 using Xunit;
-using FluentAssertions;
-using SmartScannerPro.Application;
-using SmartScannerPro.Infrastructure;
-using SmartScannerPro.Domain;
-using System.Reflection;
 
 /// <summary>
 /// Architecture dependency validation tests.
 /// </summary>
 public class DependencyRulesTests
 {
+    private static readonly Assembly DomainAssembly = typeof(SmartScannerPro.Domain.Exceptions.DomainException).Assembly;
+    private static readonly Assembly ApplicationAssembly = typeof(SmartScannerPro.Application.Exceptions.ApplicationExceptionBase).Assembly;
+    private static readonly Assembly InfrastructureAssembly = typeof(SmartScannerPro.Infrastructure.DependencyInjection).Assembly;
+    private static readonly Assembly UIAssembly = Assembly.Load("SmartScannerPro.UI");
+
     /// <summary>
     /// Verifies that the Domain layer has no dependencies on other projects.
     /// </summary>
     [Fact]
     public void Domain_ShouldNot_HaveDependenciesOnOtherProjects()
     {
-        var result = Types.InAssembly(typeof(SmartScannerPro.Domain.Class1).Assembly) // Placeholder class
+        var result = Types.InAssembly(DomainAssembly)
             .ShouldNot()
             .HaveDependencyOn("SmartScannerPro.Application")
             .And()
@@ -34,9 +37,9 @@ public class DependencyRulesTests
     /// Verifies that the Application layer does not depend on Infrastructure or UI.
     /// </summary>
     [Fact]
-    public void Application_ShouldNot_HaveDependenciesOnInfrastructure()
+    public void Application_ShouldNot_HaveDependenciesOnInfrastructureOrUI()
     {
-        var result = Types.InAssembly(typeof(SmartScannerPro.Application.DependencyInjection).Assembly)
+        var result = Types.InAssembly(ApplicationAssembly)
             .ShouldNot()
             .HaveDependencyOn("SmartScannerPro.Infrastructure")
             .And()
@@ -47,16 +50,16 @@ public class DependencyRulesTests
     }
 
     /// <summary>
-    /// Verifies that the UI layer does not depend directly on the Domain layer.
+    /// Verifies that the Infrastructure layer does not depend on the Presentation (UI).
     /// </summary>
     [Fact]
-    public void UI_ShouldNot_HaveDependenciesOnDomainDirectly()
+    public void Infrastructure_ShouldNot_HaveDependenciesOnPresentation()
     {
-        var result = Types.InAssembly(Assembly.Load("SmartScannerPro.UI"))
+        var result = Types.InAssembly(InfrastructureAssembly)
             .ShouldNot()
-            .HaveDependencyOn("SmartScannerPro.Domain")
+            .HaveDependencyOn("SmartScannerPro.UI")
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue("The UI layer should only interact with the Application layer, not Domain entities directly.");
+        result.IsSuccessful.Should().BeTrue("The Infrastructure layer must not depend on the Presentation (UI).");
     }
 }

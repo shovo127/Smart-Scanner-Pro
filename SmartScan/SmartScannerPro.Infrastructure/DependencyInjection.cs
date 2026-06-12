@@ -1,19 +1,22 @@
 namespace SmartScannerPro.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using SmartScannerPro.Application.Interfaces;
+using SmartScannerPro.Infrastructure.FileSystem;
 
 /// <summary>
-/// Extension methods for registering Infrastructure layer services.
+/// Provides extension methods for registering infrastructure services in the dependency injection container.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Adds Infrastructure layer services to the DI container.
+    /// Adds infrastructure layer services to the specified <see cref="IServiceCollection"/>.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <returns>The updated service collection.</returns>
+    /// <returns>The service collection with infrastructure services registered.</returns>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        // Register generic logging, file system managers, etc.
+        services.AddSingleton<IDirectoryManager, DirectoryManager>();
+
         return services;
     }
 }
