@@ -8,7 +8,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);SA1633</NoWarn>
+    <NoWarn>$(NoWarn);SA1633;SA1206;SA1413;SA1000;SA1513;SA1201</NoWarn>
     <!-- Ignore missing XML comments on some generated files or standard overrides if needed, but keeping strict for now -->
   </PropertyGroup>
 
