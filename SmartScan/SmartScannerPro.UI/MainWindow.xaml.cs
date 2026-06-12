@@ -1,6 +1,5 @@
-using System.Windows;
-
 namespace SmartScannerPro.UI;
+using System.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml.

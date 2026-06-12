@@ -1,12 +1,11 @@
+namespace SmartScannerPro.Tests.Architecture;
 using NetArchTest.Rules;
 using Xunit;
 using FluentAssertions;
 using SmartScannerPro.Application;
 using SmartScannerPro.Infrastructure;
-using SmartScannerPro.UI;
 using SmartScannerPro.Domain;
-
-namespace SmartScannerPro.Tests.Architecture;
+using System.Reflection;
 
 /// <summary>
 /// Architecture dependency validation tests.
@@ -53,7 +52,7 @@ public class DependencyRulesTests
     [Fact]
     public void UI_ShouldNot_HaveDependenciesOnDomainDirectly()
     {
-        var result = Types.InAssembly(typeof(SmartScannerPro.UI.App).Assembly)
+        var result = Types.InAssembly(Assembly.Load("SmartScannerPro.UI"))
             .ShouldNot()
             .HaveDependencyOn("SmartScannerPro.Domain")
             .GetResult();

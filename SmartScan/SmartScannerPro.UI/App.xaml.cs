@@ -1,11 +1,10 @@
+namespace SmartScannerPro.UI;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartScannerPro.Application;
 using SmartScannerPro.Infrastructure;
 using SmartScannerPro.Settings;
-
-namespace SmartScannerPro.UI;
 
 /// <summary>
 /// Interaction logic for App.xaml.
