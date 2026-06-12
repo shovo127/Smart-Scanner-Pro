@@ -10,7 +10,9 @@
         "dependencies": {
           "CommunityToolkit.Mvvm": "8.4.2",
           "Microsoft.Extensions.Hosting": "10.0.9",
+          "NAPS2.Images.Gdi": "1.2.1",
           "NAPS2.Sdk": "1.2.1",
+          "NAPS2.Tesseract.Binaries": "1.4.0",
           "WPF-UI": "4.3.0"
         },
         "runtime": {
@@ -440,6 +442,22 @@
       },
       "Microsoft.NETCore.Platforms/1.1.1": {},
       "Microsoft.NETCore.Targets/1.1.3": {},
+      "Microsoft.Win32.SystemEvents/9.0.3": {
+        "runtime": {
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.325.11113"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.325.11113"
+          }
+        }
+      },
       "NAPS2.Escl/1.2.1": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "10.0.9",
@@ -465,6 +483,18 @@
         },
         "runtime": {
           "lib/net8.0/NAPS2.Images.dll": {
+            "assemblyVersion": "8.2.1.0",
+            "fileVersion": "8.2.1.0"
+          }
+        }
+      },
+      "NAPS2.Images.Gdi/1.2.1": {
+        "dependencies": {
+          "NAPS2.Images": "1.2.1",
+          "System.Drawing.Common": "9.0.3"
+        },
+        "runtime": {
+          "lib/net8.0/NAPS2.Images.Gdi.dll": {
             "assemblyVersion": "8.2.1.0",
             "fileVersion": "8.2.1.0"
           }
@@ -680,6 +710,14 @@
           }
         }
       },
+      "NAPS2.Tesseract.Binaries/1.4.0": {
+        "runtime": {
+          "lib/net6.0/NAPS2.Tesseract.Binaries.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "NAPS2.Wia/2.0.3": {
         "runtime": {
           "lib/net6.0/NAPS2.Wia.dll": {
@@ -826,6 +864,21 @@
           "Microsoft.NETCore.Platforms": "1.1.1",
           "Microsoft.NETCore.Targets": "1.1.3",
           "System.Runtime": "4.3.0"
+        }
+      },
+      "System.Drawing.Common/9.0.3": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "9.0.3"
+        },
+        "runtime": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.325.11202"
+          },
+          "lib/net8.0/System.Private.Windows.Core.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.325.11202"
+          }
         }
       },
       "System.Globalization/4.3.0": {
@@ -1458,6 +1511,13 @@
       "path": "microsoft.netcore.targets/1.1.3",
       "hashPath": "microsoft.netcore.targets.1.1.3.nupkg.sha512"
     },
+    "Microsoft.Win32.SystemEvents/9.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Z0hIB2oeNqPOO0MYD0wkLpEe0LangoF3BSdMLLF5wft/rndYoXhLQvWni1OxymlWj+1adswAps2ZlrPmD9ZhBg==",
+      "path": "microsoft.win32.systemevents/9.0.3",
+      "hashPath": "microsoft.win32.systemevents.9.0.3.nupkg.sha512"
+    },
     "NAPS2.Escl/1.2.1": {
       "type": "package",
       "serviceable": true,
@@ -1471,6 +1531,13 @@
       "sha512": "sha512-GdP1hJXU5wOpJG9U+yGCBM7R7S5jHf7wHGGguC4qJ0rMmfVuvqKl5HZ4sfeZNWR8yfmdfpCkfHzHtxAqCeUFCw==",
       "path": "naps2.images/1.2.1",
       "hashPath": "naps2.images.1.2.1.nupkg.sha512"
+    },
+    "NAPS2.Images.Gdi/1.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CZLzknIXjyefLIJbzI4PUbWQOtkzbvWC8LyRGGo3x9k0/mavbeFI2ZlK+4d1c5b6JNZg2fCoEvGP2x7aiBXDIA==",
+      "path": "naps2.images.gdi/1.2.1",
+      "hashPath": "naps2.images.gdi.1.2.1.nupkg.sha512"
     },
     "NAPS2.Internals/1.2.1": {
       "type": "package",
@@ -1506,6 +1573,13 @@
       "sha512": "sha512-NlPzIJ1U3e6neNxtCID/yevIlJTb29iOmH4uZDLhYrjohu/YnrMrDpCMr53lm7vHT4qZ0w89xYmrINo3uWw/3Q==",
       "path": "naps2.sdk/1.2.1",
       "hashPath": "naps2.sdk.1.2.1.nupkg.sha512"
+    },
+    "NAPS2.Tesseract.Binaries/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j9KKkNL48uqz/5cl37AdFTw8rVyEtJpLtSTZYgpYcqlkbWKAY11+ZKF23oNeUvb6mZtPC+Nqiy5l8JE6xmiNrw==",
+      "path": "naps2.tesseract.binaries/1.4.0",
+      "hashPath": "naps2.tesseract.binaries.1.4.0.nupkg.sha512"
     },
     "NAPS2.Wia/2.0.3": {
       "type": "package",
@@ -1695,6 +1769,13 @@
       "sha512": "sha512-rswfv0f/Cqkh78rA5S8eN8Neocz234+emGCtTF3lxPY96F+mmmUen6tbn0glN6PMvlKQb9bPAY5e9u7fgPTkKw==",
       "path": "system.diagnostics.tracing/4.3.0",
       "hashPath": "system.diagnostics.tracing.4.3.0.nupkg.sha512"
+    },
+    "System.Drawing.Common/9.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yDxzWfZGvOtk8zk5apWXP/tmro1Nghn7/4bWS5np5CtwIfiVCC74qCc1qvIsnywvXKzVqIbKXRk09wts+xGfeg==",
+      "path": "system.drawing.common/9.0.3",
+      "hashPath": "system.drawing.common.9.0.3.nupkg.sha512"
     },
     "System.Globalization/4.3.0": {
       "type": "package",

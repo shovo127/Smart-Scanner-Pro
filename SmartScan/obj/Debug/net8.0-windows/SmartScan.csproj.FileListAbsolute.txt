@@ -131,3 +131,17 @@ D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.pdb
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.genruntimeconfig.cache
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\ref\SmartScan.dll
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.sourcelink.json
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\Microsoft.Win32.SystemEvents.dll
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\NAPS2.Images.Gdi.dll
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\System.Drawing.Common.dll
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\System.Private.Windows.Core.dll
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
+D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan_Content.g.cs
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_macarm\tesseract
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_mac\tesseract
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_linux\tesseract
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_linuxarm\tesseract
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_win64\tesseract.exe
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_win32\tesseract.exe
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\_winarm\tesseract.exe
+D:\Smart Scanner Pro\SmartScan\bin\Debug\net8.0-windows\NAPS2.Tesseract.Binaries.dll

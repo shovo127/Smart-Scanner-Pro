@@ -32,7 +32,7 @@ namespace SmartScan.ViewModels
 
         // Paper Source
         [ObservableProperty]
-        private ObservableCollection<string> _paperSources = new(new[] { "ADF", "Flatbed" });
+        private ObservableCollection<string> _paperSources = new(new[] { "ADF", "Flatbed", "Manual Duplex" });
         [ObservableProperty]
         private string _selectedPaperSource = "ADF";
 
@@ -110,10 +110,28 @@ namespace SmartScan.ViewModels
                 PageSize = SelectedPageSize
             };
 
-            bool success = await _scannerService.ScanAsync(config);
+            Func<Task<bool>> promptFlip = () =>
+            {
+                var result = System.Windows.MessageBox.Show(
+                    "Please flip the pages in the scanner and click OK to continue scanning the back sides, or Cancel to abort.",
+                    "Manual Duplex - Flip Pages",
+                    System.Windows.MessageBoxButton.OKCancel,
+                    System.Windows.MessageBoxImage.Information);
+                return Task.FromResult(result == System.Windows.MessageBoxResult.OK);
+            };
+
+            var files = await _scannerService.ScanAsync(config, promptFlip);
 
             IsLoading = false;
-            StatusMessage = success ? "Scan completed successfully!" : "Scan failed.";
+            if (files.Count > 0)
+            {
+                StatusMessage = $"Scan completed successfully! Saved {files.Count} pages.";
+                // We could also open the folder if needed
+            }
+            else
+            {
+                StatusMessage = "Scan failed or was cancelled.";
+            }
         }
 
         partial void OnSelectedScannerChanged(string value)

@@ -687,6 +687,28 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "Microsoft.Win32.SystemEvents/9.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
       "NAPS2.Escl/1.2.1": {
         "type": "package",
         "dependencies": {
@@ -717,6 +739,19 @@
         },
         "runtime": {
           "lib/net8.0/NAPS2.Images.dll": {}
+        }
+      },
+      "NAPS2.Images.Gdi/1.2.1": {
+        "type": "package",
+        "dependencies": {
+          "NAPS2.Images": "1.2.1",
+          "System.Drawing.Common": "9.0.3"
+        },
+        "compile": {
+          "lib/net8.0/NAPS2.Images.Gdi.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/NAPS2.Images.Gdi.dll": {}
         }
       },
       "NAPS2.Internals/1.2.1": {
@@ -940,6 +975,18 @@
           "lib/net8.0/zh-TW/NAPS2.Sdk.resources.dll": {
             "locale": "zh-TW"
           }
+        }
+      },
+      "NAPS2.Tesseract.Binaries/1.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/NAPS2.Tesseract.Binaries.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/NAPS2.Tesseract.Binaries.dll": {}
+        },
+        "build": {
+          "build/NAPS2.Tesseract.Binaries.targets": {}
         }
       },
       "NAPS2.Wia/2.0.3": {
@@ -1275,6 +1322,31 @@
           "ref/netstandard1.5/_._": {
             "related": ".xml"
           }
+        }
+      },
+      "System.Drawing.Common/9.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "9.0.3"
+        },
+        "compile": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "System.Globalization/4.3.0": {
@@ -3036,6 +3108,38 @@
         "runtime.json"
       ]
     },
+    "Microsoft.Win32.SystemEvents/9.0.3": {
+      "sha512": "Z0hIB2oeNqPOO0MYD0wkLpEe0LangoF3BSdMLLF5wft/rndYoXhLQvWni1OxymlWj+1adswAps2ZlrPmD9ZhBg==",
+      "type": "package",
+      "path": "microsoft.win32.systemevents/9.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Win32.SystemEvents.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
+        "lib/net462/Microsoft.Win32.SystemEvents.dll",
+        "lib/net462/Microsoft.Win32.SystemEvents.xml",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/net9.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net9.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
+        "microsoft.win32.systemevents.9.0.3.nupkg.sha512",
+        "microsoft.win32.systemevents.nuspec",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.xml",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "NAPS2.Escl/1.2.1": {
       "sha512": "xg8fy1MLFBcyMnaKmKmXRiVHqBYvsFjf5de2Rs5EemK8dB4iop6/zKXobpb5kSnQtBKtPBUOi3rrCl+C4vvs/w==",
       "type": "package",
@@ -3066,6 +3170,22 @@
         "lib/netstandard2.0/NAPS2.Images.dll",
         "naps2.images.1.2.1.nupkg.sha512",
         "naps2.images.nuspec"
+      ]
+    },
+    "NAPS2.Images.Gdi/1.2.1": {
+      "sha512": "CZLzknIXjyefLIJbzI4PUbWQOtkzbvWC8LyRGGo3x9k0/mavbeFI2ZlK+4d1c5b6JNZg2fCoEvGP2x7aiBXDIA==",
+      "type": "package",
+      "path": "naps2.images.gdi/1.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "lib/net462/NAPS2.Images.Gdi.dll",
+        "lib/net6.0/NAPS2.Images.Gdi.dll",
+        "lib/net8.0/NAPS2.Images.Gdi.dll",
+        "lib/netstandard2.0/NAPS2.Images.Gdi.dll",
+        "naps2.images.gdi.1.2.1.nupkg.sha512",
+        "naps2.images.gdi.nuspec"
       ]
     },
     "NAPS2.Internals/1.2.1": {
@@ -3289,6 +3409,31 @@
         "lib/net8.0/zh-TW/NAPS2.Sdk.resources.dll",
         "naps2.sdk.1.2.1.nupkg.sha512",
         "naps2.sdk.nuspec"
+      ]
+    },
+    "NAPS2.Tesseract.Binaries/1.4.0": {
+      "sha512": "j9KKkNL48uqz/5cl37AdFTw8rVyEtJpLtSTZYgpYcqlkbWKAY11+ZKF23oNeUvb6mZtPC+Nqiy5l8JE6xmiNrw==",
+      "type": "package",
+      "path": "naps2.tesseract.binaries/1.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "build/NAPS2.Tesseract.Binaries.targets",
+        "contentFiles/_linux/tesseract",
+        "contentFiles/_linuxarm/tesseract",
+        "contentFiles/_mac/tesseract",
+        "contentFiles/_macarm/tesseract",
+        "contentFiles/_win32/tesseract.exe",
+        "contentFiles/_win64/tesseract.exe",
+        "contentFiles/_winarm/tesseract.exe",
+        "lib/net462/NAPS2.Tesseract.Binaries.dll",
+        "lib/net6.0/NAPS2.Tesseract.Binaries.dll",
+        "lib/netstandard2.0/NAPS2.Tesseract.Binaries.dll",
+        "naps2.tesseract.binaries.1.4.0.nupkg.sha512",
+        "naps2.tesseract.binaries.nuspec",
+        "tesseract-authors.txt"
       ]
     },
     "NAPS2.Wia/2.0.3": {
@@ -3972,6 +4117,48 @@
         "ref/xamarinwatchos10/_._",
         "system.diagnostics.tracing.4.3.0.nupkg.sha512",
         "system.diagnostics.tracing.nuspec"
+      ]
+    },
+    "System.Drawing.Common/9.0.3": {
+      "sha512": "yDxzWfZGvOtk8zk5apWXP/tmro1Nghn7/4bWS5np5CtwIfiVCC74qCc1qvIsnywvXKzVqIbKXRk09wts+xGfeg==",
+      "type": "package",
+      "path": "system.drawing.common/9.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Drawing.Common.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net462/System.Drawing.Common.dll",
+        "lib/net462/System.Drawing.Common.pdb",
+        "lib/net462/System.Drawing.Common.xml",
+        "lib/net8.0/System.Drawing.Common.dll",
+        "lib/net8.0/System.Drawing.Common.pdb",
+        "lib/net8.0/System.Drawing.Common.xml",
+        "lib/net8.0/System.Private.Windows.Core.dll",
+        "lib/net8.0/System.Private.Windows.Core.xml",
+        "lib/net9.0/System.Drawing.Common.dll",
+        "lib/net9.0/System.Drawing.Common.pdb",
+        "lib/net9.0/System.Drawing.Common.xml",
+        "lib/net9.0/System.Private.Windows.Core.dll",
+        "lib/net9.0/System.Private.Windows.Core.xml",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.pdb",
+        "lib/netstandard2.0/System.Drawing.Common.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "system.drawing.common.9.0.3.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "System.Globalization/4.3.0": {
@@ -5919,7 +6106,9 @@
     "net8.0-windows7.0": [
       "CommunityToolkit.Mvvm >= 8.4.2",
       "Microsoft.Extensions.Hosting >= 10.0.9",
+      "NAPS2.Images.Gdi >= 1.2.1",
       "NAPS2.Sdk >= 1.2.1",
+      "NAPS2.Tesseract.Binaries >= 1.4.0",
       "WPF-UI >= 4.3.0"
     ]
   },
@@ -5973,9 +6162,17 @@
             "target": "Package",
             "version": "[10.0.9, )"
           },
+          "NAPS2.Images.Gdi": {
+            "target": "Package",
+            "version": "[1.2.1, )"
+          },
           "NAPS2.Sdk": {
             "target": "Package",
             "version": "[1.2.1, )"
+          },
+          "NAPS2.Tesseract.Binaries": {
+            "target": "Package",
+            "version": "[1.4.0, )"
           },
           "WPF-UI": {
             "target": "Package",

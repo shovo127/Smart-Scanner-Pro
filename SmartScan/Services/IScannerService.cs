@@ -9,6 +9,6 @@ namespace SmartScan.Services
         Task<List<string>> GetAvailableScannersAsync();
         string GetLastUsedScanner();
         void SetLastUsedScanner(string scannerName);
-        Task<bool> ScanAsync(ScanConfiguration config);
+        Task<List<string>> ScanAsync(ScanConfiguration config, Func<Task<bool>>? onPromptFlip = null);
     }
 }
