@@ -130,3 +130,4 @@ D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\refint\SmartScan.dll
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.pdb
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.genruntimeconfig.cache
 D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\ref\SmartScan.dll
+D:\Smart Scanner Pro\SmartScan\obj\Debug\net8.0-windows\SmartScan.sourcelink.json

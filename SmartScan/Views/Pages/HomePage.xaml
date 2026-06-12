@@ -5,35 +5,82 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="600" d:DesignWidth="800"
       Title="HomePage">
 
-    <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ui:TextBlock FontTypography="Title" Text="SmartScan Home" HorizontalAlignment="Center"/>
-            
-            <ui:CardControl Icon="{ui:SymbolIcon Scanner24}">
-                <ui:CardControl.Header>
-                    <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Select Scanner" />
-                        <ui:TextBlock FontTypography="Caption" Text="WIA, TWAIN, and eSCL are supported." Appearance="Secondary" />
-                    </StackPanel>
-                </ui:CardControl.Header>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TextBlock Grid.Row="0" FontTypography="Title" Text="SmartScan" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+        
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center" Width="400">
                 
-                <ComboBox Width="250" 
-                          ItemsSource="{Binding Scanners}" 
-                          SelectedItem="{Binding SelectedScanner}" />
-            </ui:CardControl>
+                <!-- Scanner Selection -->
+                <ui:CardControl Icon="{ui:SymbolIcon Scanner24}" Margin="0,0,0,10">
+                    <ui:CardControl.Header>
+                        <StackPanel>
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Scanner" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox Width="200" ItemsSource="{Binding Scanners}" SelectedItem="{Binding SelectedScanner}" />
+                        <ui:Button Margin="10,0,0,0" Appearance="Secondary" Command="{Binding LoadScannersCommand}" Icon="{ui:SymbolIcon ArrowClockwise24}" ToolTip="Refresh Scanners"/>
+                    </StackPanel>
+                </ui:CardControl>
 
-            <ui:Button Appearance="Primary" 
-                       Command="{Binding LoadScannersCommand}" 
-                       Content="Detect Scanners" 
-                       Icon="{ui:SymbolIcon ArrowClockwise24}" 
-                       HorizontalAlignment="Center" />
+                <!-- Paper Source & Page Size -->
+                <ui:CardControl Icon="{ui:SymbolIcon Document24}" Margin="0,0,0,10">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Document Setup" />
+                    </ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Paper Source" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox ItemsSource="{Binding PaperSources}" SelectedItem="{Binding SelectedPaperSource}" Width="200" Margin="0,0,0,10" />
+                        
+                        <TextBlock Text="Page Size" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox ItemsSource="{Binding PageSizes}" SelectedItem="{Binding SelectedPageSize}" Width="200" />
+                    </StackPanel>
+                </ui:CardControl>
 
+                <!-- Color & DPI -->
+                <ui:CardControl Icon="{ui:SymbolIcon Color24}" Margin="0,0,0,20">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Image Quality" />
+                    </ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Color Mode" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox ItemsSource="{Binding ColorModes}" SelectedItem="{Binding SelectedColorMode}" Width="200" Margin="0,0,0,10" />
+                        
+                        <TextBlock Text="Resolution (DPI)" Margin="0,0,0,5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <ComboBox ItemsSource="{Binding Dpis}" SelectedItem="{Binding SelectedDpi}" Width="200" />
+                    </StackPanel>
+                </ui:CardControl>
+
+                <!-- Start Button -->
+                <ui:Button Appearance="Primary" 
+                           Command="{Binding StartScanCommand}" 
+                           Icon="{ui:SymbolIcon Play24}" 
+                           HorizontalAlignment="Stretch"
+                           Height="50"
+                           IsEnabled="{Binding IsNotLoading}">
+                    <TextBlock Text="START" FontSize="18" FontWeight="Bold" Margin="10,0,0,0"/>
+                </ui:Button>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status Area -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
             <ui:ProgressRing IsIndeterminate="{Binding IsLoading}" 
                              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                             HorizontalAlignment="Center" />
+                             Margin="0,0,10,0" Width="20" Height="20"/>
+            <ui:TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" />
         </StackPanel>
+
     </Grid>
 </Page>

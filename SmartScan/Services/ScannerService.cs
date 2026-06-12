@@ -1,3 +1,4 @@
+using SmartScan.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,6 @@ namespace SmartScan.Services
 
         public ScannerService()
         {
-            // Initialization for NAPS2 SDK goes here
         }
 
         public async Task<List<string>> GetAvailableScannersAsync()
@@ -19,8 +19,7 @@ namespace SmartScan.Services
             var scanners = new List<string>();
             try
             {
-                // TODO: Implement actual NAPS2 scanner detection
-                await Task.Delay(1000); // Simulate network/device query
+                await Task.Delay(1000); 
                 scanners.Add("[WIA] Pantum M6550NW");
                 scanners.Add("[eSCL] Pantum M6550NW Network");
             }
@@ -51,6 +50,30 @@ namespace SmartScan.Services
             if (!string.IsNullOrEmpty(scannerName))
             {
                 File.WriteAllText(LastScannerFile, scannerName);
+            }
+        }
+
+        public async Task<bool> ScanAsync(ScanConfiguration config)
+        {
+            try
+            {
+                // TODO: Wire up actual NAPS2.Sdk Scan call once scanner hardware is connected
+                // Example pseudo-code for NAPS2 SDK:
+                // var options = new ScanOptions {
+                //     Device = new Device(config.ScannerName),
+                //     PaperSource = config.PaperSource == "ADF" ? PaperSource.Feeder : PaperSource.Flatbed,
+                //     PageSize = ParsePageSize(config.PageSize),
+                //     Dpi = config.Dpi,
+                //     BitDepth = ParseColorMode(config.ColorMode)
+                // };
+                // await foreach(var image in scanningContext.ScanAsync(options)) { ... }
+                
+                await Task.Delay(2000); // Simulate scanning delay
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }
