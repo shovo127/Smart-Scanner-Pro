@@ -1,13 +1,15 @@
 namespace SmartScannerPro.Domain.Entities;
 
+using System;
 using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Domain.ValueObjects;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a capability supported by a scanner device.
 /// </summary>
-public class ScannerCapability
+public class ScannerCapability : Entity<Guid>
 {
     private readonly List<Resolution> supportedResolutions = new List<Resolution>();
     private readonly List<PaperSize> supportedPaperSizes = new List<PaperSize>();
@@ -19,6 +21,7 @@ public class ScannerCapability
     /// </summary>
     /// <param name="supportsDuplex">True if duplex is supported; otherwise, false.</param>
     public ScannerCapability(bool supportsDuplex)
+        : base(Guid.NewGuid())
     {
         this.SupportsDuplex = supportsDuplex;
     }

@@ -2,6 +2,7 @@ namespace SmartScannerPro.Domain.Entities;
 
 using System;
 using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Domain.ValueObjects;
 using SmartScannerPro.Domain.Enums;
 using SmartScannerPro.Shared.Utilities;
@@ -9,7 +10,7 @@ using SmartScannerPro.Shared.Utilities;
 /// <summary>
 /// Represents a physical or simulated scanner device.
 /// </summary>
-public class ScannerDevice
+public class ScannerDevice : AggregateRoot<ScannerId>
 {
     private readonly List<ScannerCapability> capabilities = new List<ScannerCapability>();
 
@@ -20,19 +21,14 @@ public class ScannerDevice
     /// <param name="name">The scanner name.</param>
     /// <param name="driver">The driver type.</param>
     public ScannerDevice(ScannerId id, string name, DriverType driver)
+        : base(id)
     {
         Guard.NotNullOrWhiteSpace(name, nameof(name));
 
-        this.Id = id;
         this.Name = name;
         this.Driver = driver;
         this.Status = HealthStatus.Healthy;
     }
-
-    /// <summary>
-    /// Gets the unique identifier for the scanner.
-    /// </summary>
-    public ScannerId Id { get; }
 
     /// <summary>
     /// Gets the display name of the scanner.

@@ -1,41 +1,39 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System;
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
-/// Represents the version of a plugin.
+/// Represents a plugin version.
 /// </summary>
-public readonly record struct PluginVersion
+public sealed class PluginVersion : ValueObject
 {
     /// <summary>
-    /// Gets the semantic version number.
+    /// Initializes a new instance of the <see cref="PluginVersion"/> class.
+    /// </summary>
+    /// <param name="version">The version object.</param>
+    public PluginVersion(VersionNumber version)
+    {
+        Guard.NotNull(version, nameof(version));
+        this.Version = version;
+    }
+
+    /// <summary>
+    /// Gets the version number.
     /// </summary>
     public VersionNumber Version { get; }
 
     /// <summary>
-    /// Gets the optional release status (e.g., alpha, beta, rc1).
-    /// </summary>
-    public string PreReleaseTag { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PluginVersion"/> struct.
-    /// </summary>
-    /// <param name="version">The base version.</param>
-    /// <param name="preReleaseTag">The optional pre-release tag.</param>
-    public PluginVersion(VersionNumber version, string preReleaseTag = "")
-    {
-        this.Version = version;
-        this.PreReleaseTag = preReleaseTag;
-    }
-
-    /// <summary>
-    /// Returns the string representation.
+    /// Returns the string representation of the plugin version.
     /// </summary>
     /// <returns>The string representation.</returns>
-    public override string ToString()
+    public override string ToString() => this.Version.ToString();
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
     {
-        return string.IsNullOrWhiteSpace(this.PreReleaseTag)
-            ? this.Version.ToString()
-            : $"{this.Version}-{this.PreReleaseTag}";
+        yield return this.Version;
     }
 }

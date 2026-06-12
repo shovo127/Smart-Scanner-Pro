@@ -1,35 +1,38 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
-using System;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
-/// Represents a cryptographic hash of a file.
+/// Represents a cryptographic hash for file integrity.
 /// </summary>
-public readonly record struct FileHash
+public sealed class FileHash : ValueObject
 {
-    private static readonly Regex HashRegex = new Regex("^[a-fA-F0-9]{64}$", RegexOptions.Compiled);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileHash"/> class.
+    /// </summary>
+    /// <param name="value">The hash value.</param>
+    public FileHash(string value)
+    {
+        Guard.NotNullOrWhiteSpace(value, nameof(value));
+        this.Value = value;
+    }
 
     /// <summary>
-    /// Gets the SHA-256 hash string.
+    /// Gets the hash value string.
     /// </summary>
     public string Value { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FileHash"/> struct.
-    /// </summary>
-    /// <param name="hash">The SHA-256 hash.</param>
-    public FileHash(string hash)
-    {
-        Guard.NotNullOrWhiteSpace(hash, nameof(hash));
-        Guard.IsTrue(HashRegex.IsMatch(hash), "Invalid SHA-256 hash format.");
-        this.Value = hash.ToLowerInvariant();
-    }
-
-    /// <summary>
     /// Returns the string representation of the hash.
     /// </summary>
-    /// <returns>The hash.</returns>
+    /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.Value.ToLowerInvariant();
+    }
 }

@@ -1,26 +1,20 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
-using SmartScannerPro.Shared.Utilities;
+using SmartScannerPro.Domain.Abstractions;
 
 /// <summary>
 /// Represents the unique identifier for a scanned document.
 /// </summary>
-public readonly record struct DocumentId
+public sealed class DocumentId : StronglyTypedId<Guid>
 {
     /// <summary>
-    /// Gets the underlying GUID value.
-    /// </summary>
-    public Guid Value { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DocumentId"/> struct.
+    /// Initializes a new instance of the <see cref="DocumentId"/> class.
     /// </summary>
     /// <param name="value">The GUID value.</param>
     public DocumentId(Guid value)
+        : base(value)
     {
-        Guard.IsTrue(value != Guid.Empty, "DocumentId cannot be empty.");
-        this.Value = value;
     }
 
     /// <summary>
@@ -28,10 +22,4 @@ public readonly record struct DocumentId
     /// </summary>
     /// <returns>A new <see cref="DocumentId"/>.</returns>
     public static DocumentId New() => new DocumentId(Guid.NewGuid());
-
-    /// <summary>
-    /// Returns the string representation of the ID.
-    /// </summary>
-    /// <returns>The string representation.</returns>
-    public override string ToString() => this.Value.ToString();
 }

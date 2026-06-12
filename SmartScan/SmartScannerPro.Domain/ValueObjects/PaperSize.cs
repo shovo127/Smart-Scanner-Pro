@@ -1,33 +1,35 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
-/// Represents the physical dimensions of a paper.
+/// Represents the physical dimensions of a document.
 /// </summary>
-public readonly record struct PaperSize
+public sealed class PaperSize : ValueObject
 {
     /// <summary>
-    /// Gets the name of the paper size (e.g., A4, Letter).
+    /// Gets the A4 size.
     /// </summary>
-    public string Name { get; }
+    public static readonly PaperSize A4 = new PaperSize("A4", 210, 297);
 
     /// <summary>
-    /// Gets the width in millimeters.
+    /// Gets the Letter size.
     /// </summary>
-    public double WidthMm { get; }
+    public static readonly PaperSize Letter = new PaperSize("Letter", 215.9, 279.4);
 
     /// <summary>
-    /// Gets the height in millimeters.
+    /// Gets the Legal size.
     /// </summary>
-    public double HeightMm { get; }
+    public static readonly PaperSize Legal = new PaperSize("Legal", 215.9, 355.6);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PaperSize"/> struct.
+    /// Initializes a new instance of the <see cref="PaperSize"/> class.
     /// </summary>
-    /// <param name="name">The name of the size.</param>
-    /// <param name="widthMm">The width.</param>
-    /// <param name="heightMm">The height.</param>
+    /// <param name="name">The common name.</param>
+    /// <param name="widthMm">The width in millimeters.</param>
+    /// <param name="heightMm">The height in millimeters.</param>
     public PaperSize(string name, double widthMm, double heightMm)
     {
         Guard.NotNullOrWhiteSpace(name, nameof(name));
@@ -40,28 +42,30 @@ public readonly record struct PaperSize
     }
 
     /// <summary>
-    /// Predefined A4 size.
+    /// Gets the common name of the paper size (e.g., A4).
     /// </summary>
-    public static readonly PaperSize A4 = new PaperSize("A4", 210, 297);
+    public string Name { get; }
 
     /// <summary>
-    /// Predefined Letter size.
+    /// Gets the physical width in millimeters.
     /// </summary>
-    public static readonly PaperSize Letter = new PaperSize("Letter", 215.9, 279.4);
+    public double WidthMm { get; }
 
     /// <summary>
-    /// Predefined Legal size.
+    /// Gets the physical height in millimeters.
     /// </summary>
-    public static readonly PaperSize Legal = new PaperSize("Legal", 215.9, 355.6);
+    public double HeightMm { get; }
 
     /// <summary>
-    /// Predefined A5 size.
-    /// </summary>
-    public static readonly PaperSize A5 = new PaperSize("A5", 148, 210);
-
-    /// <summary>
-    /// Returns the string representation.
+    /// Returns the string representation of the paper size.
     /// </summary>
     /// <returns>The string representation.</returns>
     public override string ToString() => $"{this.Name} ({this.WidthMm}x{this.HeightMm} mm)";
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.WidthMm;
+        yield return this.HeightMm;
+    }
 }

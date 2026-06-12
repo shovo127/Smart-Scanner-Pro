@@ -2,13 +2,14 @@ namespace SmartScannerPro.Domain.Entities;
 
 using System;
 using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Domain.ValueObjects;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a document consisting of one or more scanned pages.
 /// </summary>
-public class ScanDocument
+public class ScanDocument : AggregateRoot<DocumentId>
 {
     private readonly List<ScanPage> pages = new List<ScanPage>();
 
@@ -19,19 +20,14 @@ public class ScanDocument
     /// <param name="name">The document name.</param>
     /// <param name="type">The document type.</param>
     public ScanDocument(DocumentId id, string name, DocumentType type)
+        : base(id)
     {
         Guard.NotNullOrWhiteSpace(name, nameof(name));
 
-        this.Id = id;
         this.Name = name;
         this.Type = type;
         this.CreatedAtUtc = DateTime.UtcNow;
     }
-
-    /// <summary>
-    /// Gets the unique identifier for the document.
-    /// </summary>
-    public DocumentId Id { get; }
 
     /// <summary>
     /// Gets the name of the document.

@@ -1,21 +1,18 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents an absolute directory path on the file system.
 /// </summary>
-public readonly record struct DirectoryPath
+public sealed class DirectoryPath : ValueObject
 {
     /// <summary>
-    /// Gets the absolute string path.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DirectoryPath"/> struct.
+    /// Initializes a new instance of the <see cref="DirectoryPath"/> class.
     /// </summary>
     /// <param name="path">The directory path.</param>
     public DirectoryPath(string path)
@@ -24,7 +21,6 @@ public readonly record struct DirectoryPath
 
         try
         {
-            // Normalize path to absolute
             this.Value = Path.GetFullPath(path);
         }
         catch (Exception ex)
@@ -34,8 +30,19 @@ public readonly record struct DirectoryPath
     }
 
     /// <summary>
+    /// Gets the absolute string path.
+    /// </summary>
+    public string Value { get; }
+
+    /// <summary>
     /// Returns the string representation of the path.
     /// </summary>
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.Value;
+    }
 }

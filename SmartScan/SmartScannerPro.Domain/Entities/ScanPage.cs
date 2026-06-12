@@ -1,13 +1,14 @@
 namespace SmartScannerPro.Domain.Entities;
 
 using System;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Domain.ValueObjects;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a single scanned page.
 /// </summary>
-public class ScanPage
+public class ScanPage : Entity<Guid>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ScanPage"/> class.
@@ -17,20 +18,15 @@ public class ScanPage
     /// <param name="size">The file size.</param>
     /// <param name="hash">The file hash.</param>
     public ScanPage(PageNumber number, string imagePath, FileSize size, FileHash hash)
+        : base(Guid.NewGuid())
     {
         Guard.NotNullOrWhiteSpace(imagePath, nameof(imagePath));
 
-        this.Id = Guid.NewGuid();
         this.Number = number;
         this.ImagePath = imagePath;
         this.Size = size;
         this.Hash = hash;
     }
-
-    /// <summary>
-    /// Gets the unique identifier for the page.
-    /// </summary>
-    public Guid Id { get; }
 
     /// <summary>
     /// Gets the page number within the document.

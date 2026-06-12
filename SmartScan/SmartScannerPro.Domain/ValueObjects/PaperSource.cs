@@ -1,45 +1,48 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
-/// Represents the physical source of the paper in the scanner.
+/// Represents the source feeding paper into the scanner.
 /// </summary>
-public readonly record struct PaperSource
+public sealed class PaperSource : ValueObject
 {
     /// <summary>
-    /// Gets the source name.
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PaperSource"/> struct.
-    /// </summary>
-    /// <param name="name">The source name.</param>
-    private PaperSource(string name)
-    {
-        Guard.NotNullOrWhiteSpace(name, nameof(name));
-        this.Name = name;
-    }
-
-    /// <summary>
-    /// Predefined Flatbed source.
+    /// Gets the Flatbed source.
     /// </summary>
     public static readonly PaperSource Flatbed = new PaperSource("Flatbed");
 
     /// <summary>
-    /// Predefined Automatic Document Feeder (ADF) source.
+    /// Gets the Automatic Document Feeder (ADF) source.
     /// </summary>
-    public static readonly PaperSource AutomaticDocumentFeeder = new PaperSource("ADF");
+    public static readonly PaperSource Adf = new PaperSource("ADF");
 
     /// <summary>
-    /// Predefined Duplex Automatic Document Feeder source.
+    /// Initializes a new instance of the <see cref="PaperSource"/> class.
     /// </summary>
-    public static readonly PaperSource Duplex = new PaperSource("Duplex");
+    /// <param name="value">The paper source name.</param>
+    public PaperSource(string value)
+    {
+        Guard.NotNullOrWhiteSpace(value, nameof(value));
+        this.Value = value;
+    }
 
     /// <summary>
-    /// Returns the string representation.
+    /// Gets the paper source value.
+    /// </summary>
+    public string Value { get; }
+
+    /// <summary>
+    /// Returns the string representation of the paper source.
     /// </summary>
     /// <returns>The string representation.</returns>
-    public override string ToString() => this.Name;
+    public override string ToString() => this.Value;
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.Value.ToLowerInvariant();
+    }
 }

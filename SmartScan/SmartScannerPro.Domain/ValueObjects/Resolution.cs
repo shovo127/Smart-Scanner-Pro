@@ -1,24 +1,16 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the Dots Per Inch (DPI) resolution of a scan.
 /// </summary>
-public readonly record struct Resolution
+public sealed class Resolution : ValueObject
 {
     /// <summary>
-    /// Gets the horizontal resolution in DPI.
-    /// </summary>
-    public int DpiX { get; }
-
-    /// <summary>
-    /// Gets the vertical resolution in DPI.
-    /// </summary>
-    public int DpiY { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Resolution"/> struct.
+    /// Initializes a new instance of the <see cref="Resolution"/> class.
     /// </summary>
     /// <param name="dpiX">The horizontal DPI.</param>
     /// <param name="dpiY">The vertical DPI.</param>
@@ -29,6 +21,16 @@ public readonly record struct Resolution
         this.DpiX = dpiX;
         this.DpiY = dpiY;
     }
+
+    /// <summary>
+    /// Gets the horizontal resolution in DPI.
+    /// </summary>
+    public int DpiX { get; }
+
+    /// <summary>
+    /// Gets the vertical resolution in DPI.
+    /// </summary>
+    public int DpiY { get; }
 
     /// <summary>
     /// Creates a symmetrical resolution where DpiX equals DpiY.
@@ -42,4 +44,11 @@ public readonly record struct Resolution
     /// </summary>
     /// <returns>The string representation.</returns>
     public override string ToString() => $"{this.DpiX}x{this.DpiY} DPI";
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.DpiX;
+        yield return this.DpiY;
+    }
 }

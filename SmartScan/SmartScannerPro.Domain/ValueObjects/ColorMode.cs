@@ -1,53 +1,53 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
-/// Represents the color depth and mode for scanning or image processing.
+/// Represents the color mode of a scan (e.g., Color, Grayscale, BlackAndWhite).
 /// </summary>
-public readonly record struct ColorMode
+public sealed class ColorMode : ValueObject
 {
     /// <summary>
-    /// Gets the logical scan mode name (e.g., Color, Grayscale).
+    /// Gets the Color mode.
     /// </summary>
-    public string Mode { get; }
+    public static readonly ColorMode Color = new ColorMode("Color");
 
     /// <summary>
-    /// Gets the bits per pixel (e.g., 1, 8, 24).
+    /// Gets the Grayscale mode.
     /// </summary>
-    public int BitsPerPixel { get; }
+    public static readonly ColorMode Grayscale = new ColorMode("Grayscale");
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ColorMode"/> struct.
+    /// Gets the Black &amp; White mode.
     /// </summary>
-    /// <param name="mode">The scan mode name.</param>
-    /// <param name="bitsPerPixel">The bit depth.</param>
-    public ColorMode(string mode, int bitsPerPixel)
+    public static readonly ColorMode BlackAndWhite = new ColorMode("BlackAndWhite");
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorMode"/> class.
+    /// </summary>
+    /// <param name="value">The color mode name.</param>
+    public ColorMode(string value)
     {
-        Guard.NotNullOrWhiteSpace(mode, nameof(mode));
-        Guard.IsTrue(bitsPerPixel > 0, "Bits per pixel must be greater than zero.");
-        this.Mode = mode;
-        this.BitsPerPixel = bitsPerPixel;
+        Guard.NotNullOrWhiteSpace(value, nameof(value));
+        this.Value = value;
     }
 
     /// <summary>
-    /// Predefined 24-bit color mode.
+    /// Gets the color mode value.
     /// </summary>
-    public static readonly ColorMode Color24Bit = new ColorMode("Color", 24);
+    public string Value { get; }
 
     /// <summary>
-    /// Predefined 8-bit grayscale mode.
-    /// </summary>
-    public static readonly ColorMode Grayscale8Bit = new ColorMode("Grayscale", 8);
-
-    /// <summary>
-    /// Predefined 1-bit black and white mode.
-    /// </summary>
-    public static readonly ColorMode BlackAndWhite1Bit = new ColorMode("BlackAndWhite", 1);
-
-    /// <summary>
-    /// Returns the string representation.
+    /// Returns the string representation of the color mode.
     /// </summary>
     /// <returns>The string representation.</returns>
-    public override string ToString() => $"{this.Mode} ({this.BitsPerPixel}-bit)";
+    public override string ToString() => this.Value;
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.Value.ToLowerInvariant();
+    }
 }

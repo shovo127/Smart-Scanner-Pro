@@ -1,19 +1,16 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
+using System.Collections.Generic;
+using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the size of a file in bytes.
 /// </summary>
-public readonly record struct FileSize
+public sealed class FileSize : ValueObject
 {
     /// <summary>
-    /// Gets the file size in bytes.
-    /// </summary>
-    public long Bytes { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FileSize"/> struct.
+    /// Initializes a new instance of the <see cref="FileSize"/> class.
     /// </summary>
     /// <param name="bytes">The size in bytes (must be >= 0).</param>
     public FileSize(long bytes)
@@ -21,6 +18,11 @@ public readonly record struct FileSize
         Guard.IsTrue(bytes >= 0, "File size cannot be negative.");
         this.Bytes = bytes;
     }
+
+    /// <summary>
+    /// Gets the file size in bytes.
+    /// </summary>
+    public long Bytes { get; }
 
     /// <summary>
     /// Gets the file size in Kilobytes (KB).
@@ -48,5 +50,11 @@ public readonly record struct FileSize
         }
 
         return $"{this.Bytes} Bytes";
+    }
+
+    /// <inheritdoc/>
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return this.Bytes;
     }
 }
