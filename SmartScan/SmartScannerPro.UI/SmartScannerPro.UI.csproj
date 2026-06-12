@@ -10,6 +10,7 @@
     <ProjectReference Include="..\SmartScannerPro.Settings\SmartScannerPro.Settings.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Diagnostics\SmartScannerPro.Diagnostics.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Localization\SmartScannerPro.Localization.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Contracts\SmartScannerPro.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

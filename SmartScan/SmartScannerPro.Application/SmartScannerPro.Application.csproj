@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Domain\SmartScannerPro.Domain.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Contracts\SmartScannerPro.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
