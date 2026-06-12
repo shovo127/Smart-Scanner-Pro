@@ -1,25 +1,34 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
-using SmartScannerPro.Domain.Abstractions;
 
 /// <summary>
-/// Represents the unique identifier for a Scanner Device.
+/// Represents the strongly-typed identifier for a Scanner.
 /// </summary>
-public sealed class ScannerId : StronglyTypedId<Guid>
+public readonly record struct ScannerId
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ScannerId"/> class.
+    /// Initializes a new instance of the <see cref="ScannerId"/> struct.
     /// </summary>
-    /// <param name="value">The GUID value.</param>
+    /// <param name="value">The underlying Guid value.</param>
     public ScannerId(Guid value)
-        : base(value)
     {
+        this.Value = value;
     }
 
     /// <summary>
-    /// Creates a new, unique <see cref="ScannerId"/>.
+    /// Gets the underlying Guid value.
     /// </summary>
-    /// <returns>A new <see cref="ScannerId"/>.</returns>
-    public static ScannerId New() => new ScannerId(Guid.NewGuid());
+    public Guid Value { get; }
+
+    /// <summary>
+    /// Gets a new, empty ScannerId.
+    /// </summary>
+    public static ScannerId Empty => new ScannerId(Guid.Empty);
+
+    /// <summary>
+    /// Creates a new ScannerId.
+    /// </summary>
+    /// <returns>A new ScannerId.</returns>
+    public static ScannerId NewId() => new ScannerId(Guid.NewGuid());
 }

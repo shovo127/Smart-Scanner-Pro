@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the physical dimensions of a document.
 /// </summary>
-public sealed class PaperSize : ValueObject
+public record PaperSize
 {
     /// <summary>
     /// Gets the A4 size.
@@ -62,10 +61,4 @@ public sealed class PaperSize : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => $"{this.Name} ({this.WidthMm}x{this.HeightMm} mm)";
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.WidthMm;
-        yield return this.HeightMm;
-    }
 }

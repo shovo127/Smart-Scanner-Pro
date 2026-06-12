@@ -3,13 +3,12 @@ namespace SmartScannerPro.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a standardized language code (e.g., en-US).
 /// </summary>
-public sealed class LanguageCode : ValueObject
+public record LanguageCode
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageCode"/> class.
@@ -41,9 +40,4 @@ public sealed class LanguageCode : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value.ToLowerInvariant();
-    }
 }

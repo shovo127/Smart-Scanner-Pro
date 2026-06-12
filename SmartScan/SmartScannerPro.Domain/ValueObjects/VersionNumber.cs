@@ -2,13 +2,12 @@ namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a semantic version number.
 /// </summary>
-public sealed class VersionNumber : ValueObject, IComparable<VersionNumber>
+public record VersionNumber : IComparable<VersionNumber>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="VersionNumber"/> class.
@@ -71,11 +70,4 @@ public sealed class VersionNumber : ValueObject, IComparable<VersionNumber>
         return this.Patch.CompareTo(other.Patch);
     }
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Major;
-        yield return this.Minor;
-        yield return this.Patch;
-    }
 }

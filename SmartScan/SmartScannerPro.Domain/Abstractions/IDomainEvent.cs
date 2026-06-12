@@ -29,11 +29,6 @@ public interface IDomainEvent
     Guid AggregateId { get; }
 
     /// <summary>
-    /// Gets the version of the aggregate at the time the event occurred.
-    /// </summary>
-    int Version { get; }
-
-    /// <summary>
     /// Gets a collection of key-value pairs representing additional metadata for the event.
     /// </summary>
     IReadOnlyDictionary<string, object> Metadata { get; }

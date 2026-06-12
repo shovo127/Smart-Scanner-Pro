@@ -14,16 +14,16 @@ public class ScanPage : Entity<Guid>
     /// Initializes a new instance of the <see cref="ScanPage"/> class.
     /// </summary>
     /// <param name="number">The page number.</param>
-    /// <param name="imagePath">The image file path.</param>
+    /// <param name="imageUri">The image file path or URI.</param>
     /// <param name="size">The file size.</param>
     /// <param name="hash">The file hash.</param>
-    public ScanPage(PageNumber number, string imagePath, FileSize size, FileHash hash)
+    public ScanPage(PageNumber number, StorageUri imageUri, FileSize size, FileHash hash)
         : base(Guid.NewGuid())
     {
-        Guard.NotNullOrWhiteSpace(imagePath, nameof(imagePath));
+        Guard.NotNull(imageUri, nameof(imageUri));
 
         this.Number = number;
-        this.ImagePath = imagePath;
+        this.ImageUri = imageUri;
         this.Size = size;
         this.Hash = hash;
     }
@@ -34,9 +34,9 @@ public class ScanPage : Entity<Guid>
     public PageNumber Number { get; private set; }
 
     /// <summary>
-    /// Gets the file path to the raw scanned image.
+    /// Gets the URI or file path to the raw scanned image.
     /// </summary>
-    public string ImagePath { get; private set; }
+    public StorageUri ImageUri { get; private set; }
 
     /// <summary>
     /// Gets the file size of the image.
@@ -60,13 +60,13 @@ public class ScanPage : Entity<Guid>
     /// <summary>
     /// Updates the image path and associated metadata after processing.
     /// </summary>
-    /// <param name="newPath">The new image path.</param>
+    /// <param name="newUri">The new image URI.</param>
     /// <param name="newSize">The new size.</param>
     /// <param name="newHash">The new hash.</param>
-    public void UpdateImage(string newPath, FileSize newSize, FileHash newHash)
+    public void UpdateImage(StorageUri newUri, FileSize newSize, FileHash newHash)
     {
-        Guard.NotNullOrWhiteSpace(newPath, nameof(newPath));
-        this.ImagePath = newPath;
+        Guard.NotNull(newUri, nameof(newUri));
+        this.ImageUri = newUri;
         this.Size = newSize;
         this.Hash = newHash;
     }

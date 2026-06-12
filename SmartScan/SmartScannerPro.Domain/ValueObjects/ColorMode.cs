@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the color mode of a scan (e.g., Color, Grayscale, BlackAndWhite).
 /// </summary>
-public sealed class ColorMode : ValueObject
+public record ColorMode
 {
     /// <summary>
     /// Gets the Color mode.
@@ -45,9 +44,4 @@ public sealed class ColorMode : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value.ToLowerInvariant();
-    }
 }

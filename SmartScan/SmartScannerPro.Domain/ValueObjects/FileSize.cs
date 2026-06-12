@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the size of a file in bytes.
 /// </summary>
-public sealed class FileSize : ValueObject
+public record FileSize
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FileSize"/> class.
@@ -52,9 +51,4 @@ public sealed class FileSize : ValueObject
         return $"{this.Bytes} Bytes";
     }
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Bytes;
-    }
 }

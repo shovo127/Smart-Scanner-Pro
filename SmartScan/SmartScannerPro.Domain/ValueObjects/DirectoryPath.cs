@@ -3,13 +3,12 @@ namespace SmartScannerPro.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents an absolute directory path on the file system.
 /// </summary>
-public sealed class DirectoryPath : ValueObject
+public record DirectoryPath
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPath"/> class.
@@ -40,9 +39,4 @@ public sealed class DirectoryPath : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value;
-    }
 }

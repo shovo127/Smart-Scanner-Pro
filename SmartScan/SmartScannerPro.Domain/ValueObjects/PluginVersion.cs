@@ -2,13 +2,12 @@ namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a plugin version.
 /// </summary>
-public sealed class PluginVersion : ValueObject
+public record PluginVersion
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginVersion"/> class.
@@ -31,9 +30,4 @@ public sealed class PluginVersion : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Version.ToString();
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Version;
-    }
 }

@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the source feeding paper into the scanner.
 /// </summary>
-public sealed class PaperSource : ValueObject
+public record PaperSource
 {
     /// <summary>
     /// Gets the Flatbed source.
@@ -40,9 +39,4 @@ public sealed class PaperSource : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value.ToLowerInvariant();
-    }
 }

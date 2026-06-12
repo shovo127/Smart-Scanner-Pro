@@ -1,25 +1,34 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
-using SmartScannerPro.Domain.Abstractions;
 
 /// <summary>
-/// Represents the unique identifier for an active scanning session.
+/// Represents the strongly-typed identifier for a Session.
 /// </summary>
-public sealed class SessionId : StronglyTypedId<Guid>
+public readonly record struct SessionId
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SessionId"/> class.
+    /// Initializes a new instance of the <see cref="SessionId"/> struct.
     /// </summary>
-    /// <param name="value">The GUID value.</param>
+    /// <param name="value">The underlying Guid value.</param>
     public SessionId(Guid value)
-        : base(value)
     {
+        this.Value = value;
     }
 
     /// <summary>
-    /// Creates a new, unique <see cref="SessionId"/>.
+    /// Gets the underlying Guid value.
     /// </summary>
-    /// <returns>A new <see cref="SessionId"/>.</returns>
-    public static SessionId New() => new SessionId(Guid.NewGuid());
+    public Guid Value { get; }
+
+    /// <summary>
+    /// Gets a new, empty SessionId.
+    /// </summary>
+    public static SessionId Empty => new SessionId(Guid.Empty);
+
+    /// <summary>
+    /// Creates a new SessionId.
+    /// </summary>
+    /// <returns>A new SessionId.</returns>
+    public static SessionId NewId() => new SessionId(Guid.NewGuid());
 }

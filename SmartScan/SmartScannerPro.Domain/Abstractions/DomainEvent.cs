@@ -15,12 +15,10 @@ public abstract record DomainEvent : IDomainEvent
     /// </summary>
     /// <param name="aggregateId">The identifier of the aggregate publishing the event.</param>
     /// <param name="correlationId">The correlation identifier.</param>
-    /// <param name="version">The version of the aggregate.</param>
     /// <param name="metadata">Optional metadata for the event.</param>
     protected DomainEvent(
         Guid aggregateId,
         Guid correlationId = default,
-        int version = 1,
         IDictionary<string, object>? metadata = null)
     {
         Guard.IsTrue(aggregateId != Guid.Empty, "AggregateId cannot be empty.");
@@ -29,7 +27,6 @@ public abstract record DomainEvent : IDomainEvent
         this.OccurredOnUtc = DateTime.UtcNow;
         this.AggregateId = aggregateId;
         this.CorrelationId = correlationId == default ? Guid.NewGuid() : correlationId;
-        this.Version = version;
 
         Dictionary<string, object> metaDict = metadata != null ? new Dictionary<string, object>(metadata) : new Dictionary<string, object>();
         this.Metadata = new ReadOnlyDictionary<string, object>(metaDict);
@@ -46,9 +43,6 @@ public abstract record DomainEvent : IDomainEvent
 
     /// <inheritdoc/>
     public Guid AggregateId { get; init; }
-
-    /// <inheritdoc/>
-    public int Version { get; init; }
 
     /// <inheritdoc/>
     public IReadOnlyDictionary<string, object> Metadata { get; init; }

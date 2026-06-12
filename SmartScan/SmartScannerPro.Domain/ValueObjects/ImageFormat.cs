@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the image output format.
 /// </summary>
-public sealed class ImageFormat : ValueObject
+public record ImageFormat
 {
     /// <summary>
     /// Gets the JPEG format.
@@ -54,10 +53,4 @@ public sealed class ImageFormat : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => $"{this.Name} ({this.Extension})";
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Name.ToLowerInvariant();
-        yield return this.Extension.ToLowerInvariant();
-    }
 }

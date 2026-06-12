@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the physical orientation of a document page.
 /// </summary>
-public sealed class PaperOrientation : ValueObject
+public record PaperOrientation
 {
     /// <summary>
     /// Gets the Portrait orientation.
@@ -40,9 +39,4 @@ public sealed class PaperOrientation : ValueObject
     /// <returns>The orientation string.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value.ToLowerInvariant();
-    }
 }

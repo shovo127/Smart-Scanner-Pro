@@ -1,25 +1,34 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System;
-using SmartScannerPro.Domain.Abstractions;
 
 /// <summary>
-/// Represents the unique identifier for a scan profile.
+/// Represents the strongly-typed identifier for a Scanner Profile.
 /// </summary>
-public sealed class ProfileId : StronglyTypedId<Guid>
+public readonly record struct ProfileId
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProfileId"/> class.
+    /// Initializes a new instance of the <see cref="ProfileId"/> struct.
     /// </summary>
-    /// <param name="value">The GUID value.</param>
+    /// <param name="value">The underlying Guid value.</param>
     public ProfileId(Guid value)
-        : base(value)
     {
+        this.Value = value;
     }
 
     /// <summary>
-    /// Creates a new, unique <see cref="ProfileId"/>.
+    /// Gets the underlying Guid value.
     /// </summary>
-    /// <returns>A new <see cref="ProfileId"/>.</returns>
-    public static ProfileId New() => new ProfileId(Guid.NewGuid());
+    public Guid Value { get; }
+
+    /// <summary>
+    /// Gets a new, empty ProfileId.
+    /// </summary>
+    public static ProfileId Empty => new ProfileId(Guid.Empty);
+
+    /// <summary>
+    /// Creates a new ProfileId.
+    /// </summary>
+    /// <returns>A new ProfileId.</returns>
+    public static ProfileId NewId() => new ProfileId(Guid.NewGuid());
 }

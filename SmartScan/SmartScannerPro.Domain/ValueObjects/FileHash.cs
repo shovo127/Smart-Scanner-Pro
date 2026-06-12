@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a cryptographic hash for file integrity.
 /// </summary>
-public sealed class FileHash : ValueObject
+public record FileHash
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FileHash"/> class.
@@ -30,9 +29,4 @@ public sealed class FileHash : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value;
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value.ToLowerInvariant();
-    }
 }

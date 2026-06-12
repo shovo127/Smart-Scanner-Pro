@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents the Dots Per Inch (DPI) resolution of a scan.
 /// </summary>
-public sealed class Resolution : ValueObject
+public record Resolution
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Resolution"/> class.
@@ -45,10 +44,4 @@ public sealed class Resolution : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => $"{this.DpiX}x{this.DpiY} DPI";
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.DpiX;
-        yield return this.DpiY;
-    }
 }

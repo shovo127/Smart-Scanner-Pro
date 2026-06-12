@@ -1,13 +1,12 @@
 namespace SmartScannerPro.Domain.ValueObjects;
 
 using System.Collections.Generic;
-using SmartScannerPro.Domain.Abstractions;
 using SmartScannerPro.Shared.Utilities;
 
 /// <summary>
 /// Represents a page number in a document.
 /// </summary>
-public sealed class PageNumber : ValueObject
+public record PageNumber
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="PageNumber"/> class.
@@ -30,9 +29,4 @@ public sealed class PageNumber : ValueObject
     /// <returns>The string representation.</returns>
     public override string ToString() => this.Value.ToString();
 
-    /// <inheritdoc/>
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return this.Value;
-    }
 }
