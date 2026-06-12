@@ -24,6 +24,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Infrastructure\SmartScannerPro.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Mock\SmartScannerPro.Scanner.Mock.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.TestAssets\SmartScannerPro.TestAssets.csproj" />
   </ItemGroup>
 
 </Project>
