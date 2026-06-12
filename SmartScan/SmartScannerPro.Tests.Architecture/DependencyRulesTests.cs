@@ -11,7 +11,7 @@ using Xunit;
 public class DependencyRulesTests
 {
     private static readonly Assembly DomainAssembly = typeof(SmartScannerPro.Domain.Exceptions.DomainException).Assembly;
-    private static readonly Assembly ApplicationAssembly = typeof(SmartScannerPro.Application.Exceptions.ApplicationExceptionBase).Assembly;
+    private static readonly Assembly ApplicationAssembly = typeof(SmartScannerPro.Application.DependencyInjection).Assembly;
     private static readonly Assembly InfrastructureAssembly = typeof(SmartScannerPro.Infrastructure.DependencyInjection).Assembly;
     private static readonly Assembly UIAssembly = Assembly.Load("SmartScannerPro.UI");
 

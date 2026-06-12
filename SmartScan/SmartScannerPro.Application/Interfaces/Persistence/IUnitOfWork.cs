@@ -1,4 +1,4 @@
-namespace SmartScannerPro.Domain.Interfaces;
+namespace SmartScannerPro.Application.Interfaces.Persistence;
 
 using System;
 using System.Threading;

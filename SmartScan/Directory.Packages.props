@@ -1,10 +1,15 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NoWarn>$(NoWarn);NU1903;NU1605;RCS1194;SA1009;SA1028</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageVersion Include="MediatR" Version="12.2.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Serilog" Version="4.0.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0" />
