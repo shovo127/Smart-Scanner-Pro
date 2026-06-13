@@ -23,6 +23,11 @@ public interface IScannerSession : IAsyncDisposable
     ScanSessionState State { get; }
 
     /// <summary>
+    /// Gets the scanner device bound to this session.
+    /// </summary>
+    IScannerDevice Device { get; }
+
+    /// <summary>
     /// Gets the current session statistics.
     /// </summary>
     SessionStatistics Statistics { get; }

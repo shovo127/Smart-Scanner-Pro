@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Application\SmartScannerPro.Application.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Contracts\SmartScannerPro.Contracts.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Mock\SmartScannerPro.Scanner.Mock.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.WIA\SmartScannerPro.Scanner.WIA.csproj" />
   </ItemGroup>
 
   <ItemGroup>

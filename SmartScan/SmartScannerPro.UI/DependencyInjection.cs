@@ -18,6 +18,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IThemeManager, ThemeManager>();
+        services.AddSingleton<ViewModels.WorkspaceViewModel>();
 
         return services;
     }

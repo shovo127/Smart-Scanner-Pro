@@ -2,6 +2,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Infrastructure\SmartScannerPro.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner\SmartScannerPro.Scanner.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Mock\SmartScannerPro.Scanner.Mock.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.WIA\SmartScannerPro.Scanner.WIA.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Scanner.Drivers\SmartScannerPro.Scanner.Drivers.csproj" />
     <ProjectReference Include="..\SmartScannerPro.ImageProcessing\SmartScannerPro.ImageProcessing.csproj" />
     <ProjectReference Include="..\SmartScannerPro.OCR\SmartScannerPro.OCR.csproj" />
@@ -17,6 +20,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Serilog.Extensions.Hosting" />
     <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="WPF-UI" />
   </ItemGroup>
 
   <PropertyGroup>

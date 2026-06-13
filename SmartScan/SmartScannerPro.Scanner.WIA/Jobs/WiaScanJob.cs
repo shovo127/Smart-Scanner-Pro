@@ -312,6 +312,7 @@ public sealed class WiaScanJob : IScanJob
             return new ScanJobResult
             {
                 Status = ScanJobStatus.Completed,
+                ScannedFilePaths = scanResult.AsReadOnly(),
                 Statistics = new ScanStatistics
                 {
                     PagesAcquired = pagesAcquired,

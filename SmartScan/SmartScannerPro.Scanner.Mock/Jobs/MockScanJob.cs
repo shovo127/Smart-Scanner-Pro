@@ -1,7 +1,9 @@
 namespace SmartScannerPro.Scanner.Mock.Jobs;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using SmartScannerPro.Scanner.Abstractions.Interfaces;
@@ -84,6 +86,7 @@ public sealed class MockScanJob : IScanJob
         }
 
         var perfProfile = MockPerformanceProfile.For(this.profile.PerformanceProfile);
+        var tempFiles = new System.Collections.Generic.List<string>();
 
         // ── Connect phase ──────────────────────────────────────────────────
         MockProgressSimulator.ReportConnecting(progress);
@@ -95,7 +98,7 @@ public sealed class MockScanJob : IScanJob
         catch (OperationCanceledException)
         {
             this.status = ScanJobStatus.Cancelled;
-            return this.BuildCancelledResult(0, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
+            return this.BuildCancelledResult(0, tempFiles, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
         }
 
         var colorMode = this.ResolveColorMode();
@@ -115,9 +118,10 @@ public sealed class MockScanJob : IScanJob
             if (midScanFailure != FailureReason.None)
             {
                 this.status = ScanJobStatus.Failed;
-                return MockFailureSimulator.CreateFailedResult(
+                var failedResult = MockFailureSimulator.CreateFailedResult(
                     midScanFailure,
                     BuildStatistics(pagesAcquired, 0, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed));
+                return failedResult with { ScannedFilePaths = tempFiles.AsReadOnly() };
             }
 
             // Scanning phase
@@ -131,7 +135,7 @@ public sealed class MockScanJob : IScanJob
             catch (OperationCanceledException)
             {
                 this.status = ScanJobStatus.Cancelled;
-                return this.BuildCancelledResult(pagesAcquired, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
+                return this.BuildCancelledResult(pagesAcquired, tempFiles, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
             }
 
             acquisitionTimer.Stop();
@@ -147,6 +151,18 @@ public sealed class MockScanJob : IScanJob
                 cancellationToken: token).ConfigureAwait(false);
             processingTimer.Stop();
 
+            // Write generated image to temp file
+            string tempFile = Path.Combine(Path.GetTempPath(), $"mock_page_{Guid.NewGuid():N}.png");
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+            using (var fileStream = File.OpenWrite(tempFile))
+            {
+                await rawImage.DataStream.CopyToAsync(fileStream, token).ConfigureAwait(false);
+            }
+            tempFiles.Add(tempFile);
+
             // Transfer phase
             MockProgressSimulator.ReportImageTransfer(progress, page, this.totalPages);
             try
@@ -157,7 +173,7 @@ public sealed class MockScanJob : IScanJob
             catch (OperationCanceledException)
             {
                 this.status = ScanJobStatus.Cancelled;
-                return this.BuildCancelledResult(pagesAcquired, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
+                return this.BuildCancelledResult(pagesAcquired, tempFiles, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
             }
 
             pagesAcquired++;
@@ -173,7 +189,7 @@ public sealed class MockScanJob : IScanJob
         catch (OperationCanceledException)
         {
             this.status = ScanJobStatus.Cancelled;
-            return this.BuildCancelledResult(pagesAcquired, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
+            return this.BuildCancelledResult(pagesAcquired, tempFiles, overallTimer.Elapsed, acquisitionTimer.Elapsed, processingTimer.Elapsed);
         }
 
         overallTimer.Stop();
@@ -182,6 +198,7 @@ public sealed class MockScanJob : IScanJob
         return new ScanJobResult
         {
             Status = ScanJobStatus.Completed,
+            ScannedFilePaths = tempFiles.AsReadOnly(),
             Statistics = BuildStatistics(
                 pagesAcquired,
                 0,
@@ -223,11 +240,12 @@ public sealed class MockScanJob : IScanJob
         await Task.Delay(TimeSpan.FromMilliseconds(actual), token).ConfigureAwait(false);
     }
 
-    private ScanJobResult BuildCancelledResult(int pagesAcquired, TimeSpan total, TimeSpan acquisition, TimeSpan processing)
+    private ScanJobResult BuildCancelledResult(int pagesAcquired, IReadOnlyList<string> tempFiles, TimeSpan total, TimeSpan acquisition, TimeSpan processing)
     {
         return new ScanJobResult
         {
             Status = ScanJobStatus.Cancelled,
+            ScannedFilePaths = tempFiles,
             Statistics = BuildStatistics(pagesAcquired, 0, total, acquisition, processing),
         };
     }

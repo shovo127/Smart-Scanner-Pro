@@ -43,6 +43,9 @@ public sealed class WiaScannerSession : IScannerSession
     public ScanSessionState State => this.state;
 
     /// <inheritdoc/>
+    public IScannerDevice Device => this.device;
+
+    /// <inheritdoc/>
     public SessionStatistics Statistics
     {
         get
