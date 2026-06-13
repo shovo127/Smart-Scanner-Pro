@@ -27,6 +27,7 @@
     <ProjectReference Include="..\SmartScannerPro.Scanner.Mock\SmartScannerPro.Scanner.Mock.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
     <ProjectReference Include="..\SmartScannerPro.TestAssets\SmartScannerPro.TestAssets.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.WIA\SmartScannerPro.Scanner.WIA.csproj" />
   </ItemGroup>
 
 </Project>

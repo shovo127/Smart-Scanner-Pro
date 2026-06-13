@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartScannerPro.Scanner.Abs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartScannerPro.Scanner.Mock", "SmartScannerPro.Scanner.Mock\SmartScannerPro.Scanner.Mock.csproj", "{7FB591F2-ECEB-477F-94E7-6C167E819103}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartScannerPro.Scanner.WIA", "SmartScannerPro.Scanner.WIA\SmartScannerPro.Scanner.WIA.csproj", "{F9E2C8AB-B2E9-465C-854E-A967107BBB94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,5 +140,9 @@ Global
 		{7FB591F2-ECEB-477F-94E7-6C167E819103}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FB591F2-ECEB-477F-94E7-6C167E819103}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FB591F2-ECEB-477F-94E7-6C167E819103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E2C8AB-B2E9-465C-854E-A967107BBB94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E2C8AB-B2E9-465C-854E-A967107BBB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E2C8AB-B2E9-465C-854E-A967107BBB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E2C8AB-B2E9-465C-854E-A967107BBB94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

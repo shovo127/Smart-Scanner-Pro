@@ -26,6 +26,7 @@
     <ProjectReference Include="..\SmartScannerPro.Application\SmartScannerPro.Application.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Domain\SmartScannerPro.Domain.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Shared\SmartScannerPro.Shared.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.WIA\SmartScannerPro.Scanner.WIA.csproj" />
   </ItemGroup>
 
 </Project>
