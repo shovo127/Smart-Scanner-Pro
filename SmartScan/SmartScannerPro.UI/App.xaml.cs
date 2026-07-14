@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using SmartScannerPro.Application;
 using SmartScannerPro.Application.Interfaces;
+using SmartScannerPro.Application.ScanWorkflow;
 using SmartScannerPro.Diagnostics;
 using SmartScannerPro.ImageProcessing;
 using SmartScannerPro.Infrastructure;
@@ -22,6 +23,8 @@ using SmartScannerPro.PDF;
 using SmartScannerPro.Plugins;
 using SmartScannerPro.Scanner;
 using SmartScannerPro.Scanner.Drivers;
+using SmartScannerPro.Scanner.Mock.Extensions;
+using SmartScannerPro.Scanner.WIA.Extensions;
 using SmartScannerPro.Settings;
 using SmartScannerPro.Shared;
 using SmartScannerPro.Shared.Utilities;
@@ -60,8 +63,15 @@ public partial class App : System.Windows.Application
                             .AddInfrastructure()
                             .AddSettings()
                             .AddLocalizationServices()
-                            .AddDiagnostics()
-                            .AddScanner()
+                            .AddDiagnostics();
+
+                    // Register scanner providers first (Composition Root owns provider selection)
+                    services.AddMockScanner();
+                    services.AddWiaScanner();
+
+                    // Register the unified scanner orchestration (discovers providers via DI)
+                    services.AddScanner()
+                            .AddScanWorkflow()
                             .AddScannerDrivers()
                             .AddImageProcessing()
                             .AddOCR()

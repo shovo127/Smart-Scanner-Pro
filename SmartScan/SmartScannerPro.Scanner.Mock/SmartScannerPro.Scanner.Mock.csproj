@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- SA1407/SA1408: Arithmetic/conditional precedence – suppressed for image rendering utility -->
+    <!-- SA1116: Parameter line formatting – suppressed for fluent drawing calls -->
+    <NoWarn>$(NoWarn);SA1407;SA1408;SA1116;SA1119;SA1515;SA1623;SA1214;SA1204;SA1101</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Domain\SmartScannerPro.Domain.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.TestAssets\SmartScannerPro.TestAssets.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Profiles\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

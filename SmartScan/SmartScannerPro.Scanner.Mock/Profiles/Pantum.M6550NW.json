@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-PANTUM-M6550NW",
+  "Name": "Pantum M6550NW",
+  "Manufacturer": "Pantum",
+  "ConnectionType": 1,
+  "ConnectionString": "192.168.1.101",
+  "FirmwareVersion": "V2.1.3",
+  "PerformanceModel": "Network",
+  "SupportsDuplex": true,
+  "SupportedDpis": [150, 300, 600],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter"],
+  "DocumentKinds": [0, 1, 6],
+  "FailureInjectors": ["DisconnectInjector", "TimeoutInjector"],
+  "Capabilities": {
+  }
+}

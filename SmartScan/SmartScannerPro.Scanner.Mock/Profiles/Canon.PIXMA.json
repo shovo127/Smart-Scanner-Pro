@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-CANON-PIXMA-G3020",
+  "Name": "Canon PIXMA G3020",
+  "Manufacturer": "Canon",
+  "ConnectionType": 0,
+  "ConnectionString": "USB\\VID_04A9&PID_1765",
+  "FirmwareVersion": "1.020",
+  "PerformanceModel": "Slow",
+  "SupportsDuplex": false,
+  "SupportedDpis": [75, 150, 300, 600],
+  "SupportedColorModes": [0, 1],
+  "SupportedPaperSizes": ["A4", "Letter"],
+  "DocumentKinds": [0, 1, 2, 3, 6],
+  "FailureInjectors": ["OutOfPaperInjector"],
+  "Capabilities": {
+  }
+}

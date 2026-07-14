@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>$(NoWarn);NU1903;NU1605;RCS1194;SA1009;SA1028</NoWarn>
+    <NoWarn>$(NoWarn);NU1903;NU1605;RCS1194;SA1009;SA1028;NU1902</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
@@ -18,7 +18,8 @@
     <PackageVersion Include="Serilog.Enrichers.Thread" Version="4.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.5" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
     <PackageVersion Include="OpenCvSharp4" Version="4.9.0.20240103" />
     <PackageVersion Include="QuestPDF" Version="2023.12.6" />
     <PackageVersion Include="FluentValidation" Version="11.9.0" />

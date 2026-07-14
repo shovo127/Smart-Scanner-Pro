@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-EPSON-ECOTANK-ET4800",
+  "Name": "Epson EcoTank ET-4800",
+  "Manufacturer": "Epson",
+  "ConnectionType": 0,
+  "ConnectionString": "USB\\VID_04B8&PID_1170",
+  "FirmwareVersion": "XX23G4",
+  "PerformanceModel": "Slow",
+  "SupportsDuplex": false,
+  "SupportedDpis": [75, 150, 300, 600, 1200],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter", "Legal"],
+  "DocumentKinds": [0, 1, 6],
+  "FailureInjectors": ["OutOfPaperInjector", "TimeoutInjector"],
+  "Capabilities": {
+  }
+}

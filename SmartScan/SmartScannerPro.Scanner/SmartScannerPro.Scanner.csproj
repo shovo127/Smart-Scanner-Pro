@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Application\SmartScannerPro.Application.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Contracts\SmartScannerPro.Contracts.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -10,7 +11,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

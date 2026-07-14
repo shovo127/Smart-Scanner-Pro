@@ -6,7 +6,12 @@ namespace SmartScannerPro.Scanner.Abstractions.Models.Sessions;
 public record ScanProgress
 {
     /// <summary>
-    /// Gets the overall percentage complete (0-100).
+    /// Gets the current stage of the scan operation.
+    /// </summary>
+    public ScanStage Stage { get; init; } = ScanStage.Connecting;
+
+    /// <summary>
+    /// Gets the overall percentage complete derived from the current stage.
     /// </summary>
     public int Percentage { get; init; }
 

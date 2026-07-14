@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-HP-LASERJET-MFP-M428",
+  "Name": "HP LaserJet Pro MFP M428fdw",
+  "Manufacturer": "HP",
+  "ConnectionType": 0,
+  "ConnectionString": "USB\\VID_03F0&PID_5B17",
+  "FirmwareVersion": "2308C",
+  "PerformanceModel": "Enterprise",
+  "SupportsDuplex": true,
+  "SupportedDpis": [75, 150, 200, 300, 600, 1200],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter", "Legal"],
+  "DocumentKinds": [0, 1, 2],
+  "FailureInjectors": [],
+  "Capabilities": {
+  }
+}

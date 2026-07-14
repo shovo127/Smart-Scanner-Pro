@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);SA1116;SA1117;SA1118;SA1119;SA1202;SA1407;SA1408;SA1502;SA1515;SA1623</NoWarn>
+  </PropertyGroup>
+
+</Project>

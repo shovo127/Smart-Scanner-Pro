@@ -1,0 +1,17 @@
+{
+  "HardwareId": "MOCK-KODAK-ALARIS-S2070",
+  "Name": "Kodak Alaris S2070",
+  "Manufacturer": "Kodak Alaris",
+  "ConnectionType": 0,
+  "ConnectionString": "USB\\VID_040A&PID_60D3",
+  "FirmwareVersion": "4.1.2.20",
+  "PerformanceModel": "Enterprise",
+  "SupportsDuplex": true,
+  "SupportedDpis": [100, 150, 200, 300, 400, 600],
+  "SupportedColorModes": [0, 1, 2],
+  "SupportedPaperSizes": ["A4", "Letter", "Legal"],
+  "DocumentKinds": [0, 2, 7],
+  "FailureInjectors": ["PaperJamInjector", "RandomFailureInjector"],
+  "Capabilities": {
+  }
+}

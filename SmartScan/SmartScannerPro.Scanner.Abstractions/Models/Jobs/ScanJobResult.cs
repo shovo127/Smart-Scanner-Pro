@@ -1,6 +1,7 @@
 namespace SmartScannerPro.Scanner.Abstractions.Models.Jobs;
 
 using System;
+using System.Collections.Generic;
 using SmartScannerPro.Domain.ValueObjects;
 
 /// <summary>
@@ -22,6 +23,11 @@ public record ScanJobResult
     /// Gets the statistics gathered during the job.
     /// </summary>
     public required ScanStatistics Statistics { get; init; }
+
+    /// <summary>
+    /// Gets the list of file paths to the acquired page images.
+    /// </summary>
+    public IReadOnlyList<string> ScannedFilePaths { get; init; } = Array.Empty<string>();
 
     /// <summary>
     /// Gets the failure reason, if the job failed.
