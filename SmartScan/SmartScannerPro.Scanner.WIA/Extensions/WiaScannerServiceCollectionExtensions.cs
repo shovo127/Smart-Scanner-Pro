@@ -31,6 +31,7 @@ public static class WiaScannerServiceCollectionExtensions
 
         // Session lifecycle
         services.AddSingleton<WiaScannerFactory>();
+        services.AddSingleton<WiaScannerProviderFactory>();
 
         // Diagnostics
         services.AddSingleton<WiaScannerDiagnostics>();
@@ -46,6 +47,7 @@ public static class WiaScannerServiceCollectionExtensions
         services.AddSingleton<IScannerDiagnostics>(sp => sp.GetRequiredService<WiaScannerDiagnostics>());
         services.AddSingleton<IScannerHealthMonitor>(sp => sp.GetRequiredService<WiaScannerHealthMonitor>());
         services.AddSingleton<IScannerProvider>(sp => sp.GetRequiredService<WiaScannerProvider>());
+        services.AddSingleton<IScannerProviderFactory>(sp => sp.GetRequiredService<WiaScannerProviderFactory>());
 
         return services;
     }

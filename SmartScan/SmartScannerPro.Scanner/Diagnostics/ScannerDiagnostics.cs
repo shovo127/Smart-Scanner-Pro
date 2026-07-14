@@ -1,61 +1,94 @@
 namespace SmartScannerPro.Scanner.Diagnostics;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SmartScannerPro.Scanner.Abstractions.Interfaces;
 using SmartScannerPro.Scanner.Abstractions.Models.Diagnostics;
-using SmartScannerPro.Scanner.Mock.Diagnostics;
-using SmartScannerPro.Scanner.WIA.Diagnostics;
 
 /// <summary>
-/// Routes scanner diagnostics queries to the appropriate provider diagnostic service based on the HardwareId.
+/// Aggregates diagnostics queries across all registered provider diagnostics services.
+/// Each provider registers its own <see cref="IScannerDiagnostics"/> implementation;
+/// this orchestrator delegates based on hardware ID prefix matching.
 /// </summary>
 public sealed class ScannerDiagnostics : IScannerDiagnostics
 {
-    private readonly MockScannerDiagnostics mockDiagnostics;
-    private readonly WiaScannerDiagnostics wiaDiagnostics;
+    private readonly IReadOnlyList<IScannerDiagnostics> providerDiagnostics;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ScannerDiagnostics"/> class.
     /// </summary>
-    /// <param name="mockDiagnostics">The mock diagnostics service.</param>
-    /// <param name="wiaDiagnostics">The WIA diagnostics service.</param>
-    public ScannerDiagnostics(MockScannerDiagnostics mockDiagnostics, WiaScannerDiagnostics wiaDiagnostics)
+    /// <param name="providerDiagnostics">All registered provider-level diagnostics services.</param>
+    public ScannerDiagnostics(IEnumerable<IScannerDiagnostics> providerDiagnostics)
     {
-        this.mockDiagnostics = mockDiagnostics ?? throw new ArgumentNullException(nameof(mockDiagnostics));
-        this.wiaDiagnostics = wiaDiagnostics ?? throw new ArgumentNullException(nameof(wiaDiagnostics));
+        this.providerDiagnostics = (providerDiagnostics ?? throw new ArgumentNullException(nameof(providerDiagnostics)))
+            .ToList()
+            .AsReadOnly();
     }
 
     /// <inheritdoc/>
-    public Task<DiagnosticResult> RunDiagnosticsAsync(string hardwareId, CancellationToken cancellationToken = default)
+    public async Task<DiagnosticResult> RunDiagnosticsAsync(string hardwareId, CancellationToken cancellationToken = default)
     {
         if (hardwareId == null)
         {
             throw new ArgumentNullException(nameof(hardwareId));
         }
 
-        if (hardwareId.StartsWith("MOCK-", StringComparison.OrdinalIgnoreCase))
+        // Try each registered provider until one succeeds
+        foreach (var service in this.providerDiagnostics)
         {
-            return this.mockDiagnostics.RunDiagnosticsAsync(hardwareId, cancellationToken);
+            try
+            {
+                var result = await service.RunDiagnosticsAsync(hardwareId, cancellationToken).ConfigureAwait(false);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            catch (NotSupportedException)
+            {
+                // Provider doesn't handle this hardware ID — try the next
+            }
         }
 
-        return this.wiaDiagnostics.RunDiagnosticsAsync(hardwareId, cancellationToken);
+        return new DiagnosticResult
+        {
+            HardwareId = hardwareId,
+            IsOnline = false,
+            ErrorMessage = "No diagnostics provider is available for this device.",
+        };
     }
 
     /// <inheritdoc/>
-    public Task<PerformanceSnapshot> CapturePerformanceSnapshotAsync(string hardwareId, CancellationToken cancellationToken = default)
+    public async Task<PerformanceSnapshot> CapturePerformanceSnapshotAsync(string hardwareId, CancellationToken cancellationToken = default)
     {
         if (hardwareId == null)
         {
             throw new ArgumentNullException(nameof(hardwareId));
         }
 
-        if (hardwareId.StartsWith("MOCK-", StringComparison.OrdinalIgnoreCase))
+        foreach (var service in this.providerDiagnostics)
         {
-            return this.mockDiagnostics.CapturePerformanceSnapshotAsync(hardwareId, cancellationToken);
+            try
+            {
+                var snapshot = await service.CapturePerformanceSnapshotAsync(hardwareId, cancellationToken).ConfigureAwait(false);
+                if (snapshot != null)
+                {
+                    return snapshot;
+                }
+            }
+            catch (NotSupportedException)
+            {
+                // Provider doesn't handle this hardware ID — try the next
+            }
         }
 
-        return this.wiaDiagnostics.CapturePerformanceSnapshotAsync(hardwareId, cancellationToken);
+        return new PerformanceSnapshot
+        {
+            HardwareId = hardwareId,
+            CapturedAt = DateTimeOffset.UtcNow,
+        };
     }
 }

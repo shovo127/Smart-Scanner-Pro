@@ -2,12 +2,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartScannerPro.Application\SmartScannerPro.Application.csproj" />
-    <ProjectReference Include="..\SmartScannerPro.Contracts\SmartScannerPro.Contracts.csproj" />
     <ProjectReference Include="..\SmartScannerPro.Scanner.Abstractions\SmartScannerPro.Scanner.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Domain\SmartScannerPro.Domain.csproj" />
+    <ProjectReference Include="..\SmartScannerPro.Shared\SmartScannerPro.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="SixLabors.ImageSharp" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
   <PropertyGroup>

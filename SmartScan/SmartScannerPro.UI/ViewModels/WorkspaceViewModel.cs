@@ -8,17 +8,25 @@ using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MediatR;
+using SmartScannerPro.Application.ScanWorkflow.Models;
+using SmartScannerPro.Application.ScanWorkflow.Notifications;
+using SmartScannerPro.Application.ScanWorkflow.Services;
 using SmartScannerPro.Scanner.Abstractions.Interfaces;
 using SmartScannerPro.Scanner.Abstractions.Models.Discovery;
-using SmartScannerPro.Scanner.Abstractions.Models.Jobs;
-using SmartScannerPro.Scanner.Abstractions.Models.Sessions;
 
 /// <summary>
 /// Main workspace view model for coordinating the desktop scanning application.
+/// Delegates all scanning orchestration to <see cref="ScanWorkflowService"/> and
+/// reacts to MediatR notifications for real-time page and progress updates.
 /// </summary>
-public sealed partial class WorkspaceViewModel : ObservableObject
+public sealed partial class WorkspaceViewModel :
+    ObservableObject,
+    INotificationHandler<PageScannedNotification>,
+    INotificationHandler<WorkflowProgressNotification>
 {
     private readonly IScannerEngine scannerEngine;
+    private readonly ScanWorkflowService workflowService;
     private CancellationTokenSource? scanCts;
 
     /// <summary>
@@ -32,6 +40,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject
     /// </summary>
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartScanCommand))]
+    [NotifyCanExecuteChangedFor(nameof(StartDuplexScanCommand))]
     private ScannerDescriptor? selectedScanner;
 
     /// <summary>
@@ -45,6 +54,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject
     /// </summary>
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartScanCommand))]
+    [NotifyCanExecuteChangedFor(nameof(StartDuplexScanCommand))]
     private bool isScanning;
 
     /// <summary>
@@ -162,18 +172,48 @@ public sealed partial class WorkspaceViewModel : ObservableObject
     /// Initializes a new instance of the <see cref="WorkspaceViewModel"/> class.
     /// </summary>
     /// <param name="scannerEngine">The scanner engine orchestrator.</param>
-    public WorkspaceViewModel(IScannerEngine scannerEngine)
+    /// <param name="workflowService">The scan workflow service.</param>
+    public WorkspaceViewModel(IScannerEngine scannerEngine, ScanWorkflowService workflowService)
     {
         this.scannerEngine = scannerEngine ?? throw new ArgumentNullException(nameof(scannerEngine));
+        this.workflowService = workflowService ?? throw new ArgumentNullException(nameof(workflowService));
         this.outputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Scans");
 
-        // Automatically discover scanners on load
         _ = this.RefreshScannersAsync();
     }
 
     private bool CanScan => this.SelectedScanner != null && !this.IsScanning;
 
     private bool HasSelectedPage => this.SelectedPage != null;
+
+    // ─── MediatR Notification Handlers ───────────────────────────────────────
+
+    /// <inheritdoc/>
+    Task INotificationHandler<PageScannedNotification>.Handle(PageScannedNotification notification, CancellationToken cancellationToken)
+    {
+        // Dispatch to UI thread since ObservableCollection requires it
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            this.AddPageFromWorkflow(notification.Page);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    Task INotificationHandler<WorkflowProgressNotification>.Handle(WorkflowProgressNotification notification, CancellationToken cancellationToken)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            this.ProgressPercentage = notification.Progress.Percentage;
+            this.ProgressMessage = notification.Progress.Message;
+            this.StatusMessage = MapStageToStatus(notification.Progress.Stage);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    // ─── Commands ─────────────────────────────────────────────────────────────
 
     /// <summary>
     /// Asynchronously refreshes the available scanner devices.
@@ -200,7 +240,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject
             };
 
             var result = await this.scannerEngine.Discovery.DiscoverAsync(request).ConfigureAwait(true);
-            
+
             this.Scanners.Clear();
             foreach (var scanner in result.Scanners)
             {
@@ -226,7 +266,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Starts the scanning job.
+    /// Starts a single-page or ADF scan workflow.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     [RelayCommand(CanExecute = nameof(CanScan))]
@@ -237,134 +277,26 @@ public sealed partial class WorkspaceViewModel : ObservableObject
             return;
         }
 
-        this.IsScanning = true;
-        this.ShowProgressBar = true;
-        this.ProgressPercentage = 0;
-        this.ProgressMessage = "Initializing scanner session...";
-        this.StatusMessage = "Connecting";
+        var mode = this.SelectedSource.StartsWith("Adf", StringComparison.OrdinalIgnoreCase)
+            ? WorkflowMode.Adf
+            : WorkflowMode.Single;
 
-        this.scanCts = new CancellationTokenSource();
+        await this.RunWorkflowAsync(mode, flipCallback: null).ConfigureAwait(true);
+    }
 
-        try
+    /// <summary>
+    /// Starts a Manual Duplex scan workflow.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    [RelayCommand(CanExecute = nameof(CanScan))]
+    private async Task StartDuplexScanAsync()
+    {
+        if (this.SelectedScanner == null)
         {
-            // Configure session options
-            var sessionOptions = new ScanSessionOptions
-            {
-                HardwareId = this.SelectedScanner.HardwareId,
-                Timeout = TimeSpan.FromMinutes(2)
-            };
-
-            await using var session = await this.scannerEngine.Factory.CreateSessionAsync(sessionOptions, this.scanCts.Token).ConfigureAwait(true);
-
-            // Apply capability settings to the device inside the session
-            await session.Device.Capabilities.SetCapabilityValueAsync("document-source", this.SelectedSource, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("color-mode", this.SelectedColorMode, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("resolution", this.SelectedResolution, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("paper-size", this.SelectedPaperSize, this.scanCts.Token).ConfigureAwait(true);
-
-            // Create scan job options
-            var jobOptions = new ScanJobOptions
-            {
-                SessionOptions = sessionOptions,
-                IsBackgroundJob = false,
-                PromptForMorePages = false
-            };
-
-            var job = session.CreateJob(jobOptions);
-
-            var progressReporter = new Progress<ScanProgress>(p =>
-            {
-                this.ProgressPercentage = p.Percentage;
-                this.ProgressMessage = p.Message;
-                
-                // Map stages to status messages
-                this.StatusMessage = p.Stage switch
-                {
-                    ScanStage.Connecting => "Connecting",
-                    ScanStage.Preparing => "Connecting",
-                    ScanStage.Scanning => "Scanning",
-                    ScanStage.Transferring => "Transferring",
-                    ScanStage.Finalizing => "Transferring",
-                    ScanStage.Completed => "Completed",
-                    _ => "Scanning"
-                };
-            });
-
-            var result = await job.ExecuteAsync(progressReporter, this.scanCts.Token).ConfigureAwait(true);
-
-            if (result.Status == ScanJobStatus.Completed)
-            {
-                this.StatusMessage = "Completed";
-                this.ProgressMessage = "Saving scanned pages...";
-                
-                // Save output folder
-                if (!Directory.Exists(this.OutputFolder))
-                {
-                    Directory.CreateDirectory(this.OutputFolder);
-                }
-
-                // Process output file naming and move/copy pages to final output directory
-                int startIndex = this.Pages.Count + 1;
-                foreach (var tempPath in result.ScannedFilePaths)
-                {
-                    if (File.Exists(tempPath))
-                    {
-                        var formattedNum = startIndex.ToString("D4");
-                        var finalFileName = this.FileNamePattern.Replace("####", formattedNum) + ".png";
-                        var finalPath = Path.Combine(this.OutputFolder, finalFileName);
-
-                        // Ensure filename is unique if duplicates exist
-                        int duplicateSuffix = 1;
-                        while (File.Exists(finalPath))
-                        {
-                            var filenameNoExt = Path.GetFileNameWithoutExtension(finalFileName);
-                            finalPath = Path.Combine(this.OutputFolder, $"{filenameNoExt}_{duplicateSuffix}.png");
-                            duplicateSuffix++;
-                        }
-
-                        File.Copy(tempPath, finalPath, true);
-
-                        var pageVm = new PageViewModel(finalPath, startIndex);
-                        this.Pages.Add(pageVm);
-                        this.SelectedPage = pageVm;
-                        startIndex++;
-                    }
-                }
-
-                this.ProgressMessage = $"Successfully scanned {result.ScannedFilePaths.Count} pages.";
-            }
-            else if (result.Status == ScanJobStatus.Cancelled)
-            {
-                this.StatusMessage = "Cancelled";
-                this.ProgressMessage = "Scanning operation cancelled by user.";
-            }
-            else if (result.Status == ScanJobStatus.Failed)
-            {
-                this.StatusMessage = "Error";
-                var friendlyError = this.GetFriendlyErrorMessage(result.Exception);
-                this.ProgressMessage = $"Scan failed: {friendlyError}";
-                MessageBox.Show($"Scanning failed: {friendlyError}", "Scan Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            return;
         }
-        catch (OperationCanceledException)
-        {
-            this.StatusMessage = "Cancelled";
-            this.ProgressMessage = "Scanning cancelled.";
-        }
-        catch (Exception ex)
-        {
-            this.StatusMessage = "Error";
-            var friendlyError = this.GetFriendlyErrorMessage(ex);
-            this.ProgressMessage = $"Failed to initialize session: {friendlyError}";
-            MessageBox.Show($"Failed to run scan job: {friendlyError}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        finally
-        {
-            this.IsScanning = false;
-            this.ShowProgressBar = false;
-            this.scanCts?.Dispose();
-            this.scanCts = null;
-        }
+
+        await this.RunWorkflowAsync(WorkflowMode.ManualDuplex, this.ShowFlipPromptAsync).ConfigureAwait(true);
     }
 
     /// <summary>
@@ -401,7 +333,6 @@ public sealed partial class WorkspaceViewModel : ObservableObject
             var index = this.Pages.IndexOf(page);
             this.Pages.Remove(page);
 
-            // Try to delete file if it was temporary
             try
             {
                 if (File.Exists(page.ImagePath))
@@ -411,16 +342,14 @@ public sealed partial class WorkspaceViewModel : ObservableObject
             }
             catch
             {
-                // Suppress file delete failure (e.g. file locked by process)
+                // Suppress file delete failure (e.g., file locked by image preview)
             }
 
-            // Re-order remaining pages
             for (int i = 0; i < this.Pages.Count; i++)
             {
                 this.Pages[i].PageNumber = i + 1;
             }
 
-            // Select next page in queue
             if (this.Pages.Count > 0)
             {
                 this.SelectedPage = this.Pages[Math.Min(index, this.Pages.Count - 1)];
@@ -445,84 +374,7 @@ public sealed partial class WorkspaceViewModel : ObservableObject
         }
 
         var pageToReplace = this.SelectedPage;
-        this.IsScanning = true;
-        this.ShowProgressBar = true;
-        this.ProgressPercentage = 0;
-        this.ProgressMessage = "Rescanning page...";
-        this.StatusMessage = "Connecting";
-
-        this.scanCts = new CancellationTokenSource();
-
-        try
-        {
-            var sessionOptions = new ScanSessionOptions
-            {
-                HardwareId = this.SelectedScanner.HardwareId,
-                Timeout = TimeSpan.FromMinutes(2)
-            };
-
-            await using var session = await this.scannerEngine.Factory.CreateSessionAsync(sessionOptions, this.scanCts.Token).ConfigureAwait(true);
-
-            // Apply capability settings to the device
-            await session.Device.Capabilities.SetCapabilityValueAsync("document-source", this.SelectedSource, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("color-mode", this.SelectedColorMode, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("resolution", this.SelectedResolution, this.scanCts.Token).ConfigureAwait(true);
-            await session.Device.Capabilities.SetCapabilityValueAsync("paper-size", this.SelectedPaperSize, this.scanCts.Token).ConfigureAwait(true);
-
-            var jobOptions = new ScanJobOptions
-            {
-                SessionOptions = sessionOptions,
-                IsBackgroundJob = false,
-                PromptForMorePages = false
-            };
-
-            var job = session.CreateJob(jobOptions);
-            var progressReporter = new Progress<ScanProgress>(p =>
-            {
-                this.ProgressPercentage = p.Percentage;
-                this.ProgressMessage = p.Message;
-                this.StatusMessage = p.Stage == ScanStage.Scanning ? "Scanning" : "Transferring";
-            });
-
-            var result = await job.ExecuteAsync(progressReporter, this.scanCts.Token).ConfigureAwait(true);
-
-            if (result.Status == ScanJobStatus.Completed && result.ScannedFilePaths.Count > 0)
-            {
-                this.StatusMessage = "Completed";
-                var newTempPath = result.ScannedFilePaths[0];
-
-                if (File.Exists(newTempPath))
-                {
-                    // Copy new scan over the old image path to preserve location
-                    File.Copy(newTempPath, pageToReplace.ImagePath, true);
-                    pageToReplace.RefreshThumbnail();
-
-                    // Trigger property change for Preview refresh
-                    var currentSelected = this.SelectedPage;
-                    this.SelectedPage = null;
-                    this.SelectedPage = currentSelected;
-                }
-
-                this.ProgressMessage = "Page rescanned successfully.";
-            }
-            else
-            {
-                this.StatusMessage = "Error";
-                this.ProgressMessage = "Rescan failed or cancelled.";
-            }
-        }
-        catch (Exception ex)
-        {
-            this.StatusMessage = "Error";
-            MessageBox.Show($"Failed to rescan page: {this.GetFriendlyErrorMessage(ex)}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        finally
-        {
-            this.IsScanning = false;
-            this.ShowProgressBar = false;
-            this.scanCts?.Dispose();
-            this.scanCts = null;
-        }
+        await this.RunWorkflowAsync(WorkflowMode.Single, flipCallback: null, replacePageVm: pageToReplace).ConfigureAwait(true);
     }
 
     /// <summary>
@@ -565,14 +417,208 @@ public sealed partial class WorkspaceViewModel : ObservableObject
         this.ZoomLevel = 1.0;
     }
 
-    private string GetFriendlyErrorMessage(Exception? ex)
+    // ─── Workflow Execution ───────────────────────────────────────────────────
+
+    private async Task RunWorkflowAsync(
+        WorkflowMode mode,
+        Func<CancellationToken, Task<bool>>? flipCallback,
+        PageViewModel? replacePageVm = null)
+    {
+        if (this.SelectedScanner == null)
+        {
+            return;
+        }
+
+        this.IsScanning = true;
+        this.ShowProgressBar = true;
+        this.ProgressPercentage = 0;
+        this.ProgressMessage = "Initializing scanner session...";
+        this.StatusMessage = "Connecting";
+        this.scanCts = new CancellationTokenSource();
+
+        // When replacing a specific page (rescan), clear real-time additions for that slot
+        // so the notification handler adds fresh content rather than appending.
+        bool isRescan = replacePageVm != null;
+
+        try
+        {
+            var workflowRequest = new WorkflowRequest
+            {
+                HardwareId = this.SelectedScanner.HardwareId,
+                Mode = mode,
+                ColorMode = this.SelectedColorMode,
+                Resolution = this.SelectedResolution,
+                PaperSize = this.SelectedPaperSize,
+                Source = this.SelectedSource,
+                MaxPages = mode == WorkflowMode.Single ? 1 : null,
+                FlipPromptCallback = flipCallback,
+            };
+
+            // For rescan, disable real-time page notifications (we handle the result manually)
+            WorkflowResult result;
+            if (isRescan)
+            {
+                result = await this.workflowService.ExecuteWorkflowAsync(workflowRequest, this.scanCts.Token).ConfigureAwait(true);
+                this.ApplyRescanResult(result, replacePageVm!);
+            }
+            else
+            {
+                // Pages are added incrementally via INotificationHandler<PageScannedNotification>
+                result = await this.workflowService.ExecuteWorkflowAsync(workflowRequest, this.scanCts.Token).ConfigureAwait(true);
+            }
+
+            switch (result.Status)
+            {
+                case WorkflowStatus.Completed:
+                    this.StatusMessage = "Completed";
+                    this.ProgressMessage = $"Successfully scanned {result.TotalPagesScanned} page(s).";
+
+                    if (!isRescan)
+                    {
+                        this.MovePagesToPermanentStorage(result);
+                    }
+
+                    break;
+
+                case WorkflowStatus.Cancelled:
+                    this.StatusMessage = "Cancelled";
+                    this.ProgressMessage = "Scanning operation cancelled by user.";
+                    break;
+
+                case WorkflowStatus.Failed:
+                    this.StatusMessage = "Error";
+                    var friendlyError = GetFriendlyErrorMessage(result.Exception);
+                    this.ProgressMessage = $"Scan failed: {friendlyError}";
+                    MessageBox.Show($"Scanning failed: {friendlyError}", "Scan Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            this.StatusMessage = "Cancelled";
+            this.ProgressMessage = "Scanning cancelled.";
+        }
+        catch (Exception ex)
+        {
+            this.StatusMessage = "Error";
+            var friendlyError = GetFriendlyErrorMessage(ex);
+            this.ProgressMessage = $"Failed to run workflow: {friendlyError}";
+            MessageBox.Show($"Failed to run scan workflow: {friendlyError}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            this.IsScanning = false;
+            this.ShowProgressBar = false;
+            this.scanCts?.Dispose();
+            this.scanCts = null;
+        }
+    }
+
+    private void AddPageFromWorkflow(WorkflowPage workflowPage)
+    {
+        if (!Directory.Exists(this.OutputFolder))
+        {
+            Directory.CreateDirectory(this.OutputFolder);
+        }
+
+        var pageNumber = this.Pages.Count + 1;
+        var formattedNum = pageNumber.ToString("D4");
+        var finalFileName = this.FileNamePattern.Replace("####", formattedNum) + ".png";
+        var finalPath = Path.Combine(this.OutputFolder, finalFileName);
+
+        int duplicateSuffix = 1;
+        while (File.Exists(finalPath))
+        {
+            var nameWithoutExt = Path.GetFileNameWithoutExtension(finalFileName);
+            finalPath = Path.Combine(this.OutputFolder, $"{nameWithoutExt}_{duplicateSuffix}.png");
+            duplicateSuffix++;
+        }
+
+        if (File.Exists(workflowPage.StagingFilePath))
+        {
+            File.Copy(workflowPage.StagingFilePath, finalPath, overwrite: true);
+        }
+
+        var pageVm = new PageViewModel(finalPath, pageNumber);
+        this.Pages.Add(pageVm);
+        this.SelectedPage = pageVm;
+    }
+
+    private void ApplyRescanResult(WorkflowResult result, PageViewModel pageToReplace)
+    {
+        if (result.Status != WorkflowStatus.Completed || result.Pages.Count == 0)
+        {
+            this.StatusMessage = "Error";
+            this.ProgressMessage = "Rescan failed or cancelled.";
+            return;
+        }
+
+        var newPage = result.Pages[0];
+        if (File.Exists(newPage.StagingFilePath))
+        {
+            File.Copy(newPage.StagingFilePath, pageToReplace.ImagePath, overwrite: true);
+            pageToReplace.RefreshThumbnail();
+
+            var current = this.SelectedPage;
+            this.SelectedPage = null;
+            this.SelectedPage = current;
+        }
+
+        this.StatusMessage = "Completed";
+        this.ProgressMessage = "Page rescanned successfully.";
+    }
+
+    private void MovePagesToPermanentStorage(WorkflowResult result)
+    {
+        // Pages added via INotificationHandler already moved to permanent storage.
+        // This is a safety pass for any pages that may have been missed (e.g., in rescan mode).
+        _ = result;
+    }
+
+    private async Task<bool> ShowFlipPromptAsync(CancellationToken cancellationToken)
+    {
+        // Must run on the UI thread
+        bool shouldContinue = false;
+
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            var result = MessageBox.Show(
+                "Front side scan complete.\n\nPlease flip your document stack and place it back in the feeder.\n\nClick OK to scan the back side, or Cancel to stop.",
+                "Manual Duplex — Flip Pages",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Information);
+
+            shouldContinue = result == MessageBoxResult.OK;
+        });
+
+        return shouldContinue;
+    }
+
+    // ─── Static Helpers ───────────────────────────────────────────────────────
+
+    private static string MapStageToStatus(Scanner.Abstractions.Models.Sessions.ScanStage stage)
+    {
+        return stage switch
+        {
+            Scanner.Abstractions.Models.Sessions.ScanStage.Connecting => "Connecting",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Negotiating => "Connecting",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Preparing => "Connecting",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Scanning => "Scanning",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Transferring => "Transferring",
+            Scanner.Abstractions.Models.Sessions.ScanStage.PostProcessing => "Transferring",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Finalizing => "Transferring",
+            Scanner.Abstractions.Models.Sessions.ScanStage.Completed => "Completed",
+            _ => "Scanning",
+        };
+    }
+
+    private static string GetFriendlyErrorMessage(Exception? ex)
     {
         if (ex == null)
         {
             return "Unknown error.";
         }
 
-        // Friendly message mapping, hiding any raw COM/HResult codes from general users
         if (ex is System.Runtime.InteropServices.COMException comEx)
         {
             return (uint)comEx.HResult switch

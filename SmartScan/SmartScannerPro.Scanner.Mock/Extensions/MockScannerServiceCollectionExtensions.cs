@@ -49,6 +49,7 @@ public static class MockScannerServiceCollectionExtensions
 
         // Session lifecycle
         services.AddSingleton<MockScannerFactory>();
+        services.AddSingleton<MockScannerProviderFactory>();
 
         // Diagnostics
         services.AddSingleton<MockScannerDiagnostics>();
@@ -64,6 +65,7 @@ public static class MockScannerServiceCollectionExtensions
         services.AddSingleton<IScannerDiagnostics>(sp => sp.GetRequiredService<MockScannerDiagnostics>());
         services.AddSingleton<IScannerHealthMonitor>(sp => sp.GetRequiredService<MockScannerHealthMonitor>());
         services.AddSingleton<IScannerProvider>(sp => sp.GetRequiredService<MockScannerProvider>());
+        services.AddSingleton<IScannerProviderFactory>(sp => sp.GetRequiredService<MockScannerProviderFactory>());
 
         return services;
     }
